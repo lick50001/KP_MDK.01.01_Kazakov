@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SpaceMarket.Api.Classes;
 using SpaceMarket.Api.Context;
 using SpaceMarket.Api.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,86 +10,87 @@ namespace SpaceMarket.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemsController : ControllerBase
+    public class LogController : ControllerBase
     {
         private readonly SpaceMarketContext _context;
-        public ItemsController(SpaceMarketContext context) { _context = context; }
+        public LogController(SpaceMarketContext context) { _context = context; }
 
         [HttpGet("Get")]
-        public async Task<ActionResult<IEnumerable<Items>>> GetMyItems([FromQuery] string token)
+        public async Task<ActionResult> GetMyLogs([FromQuery] string token)
         {
             var userIdStr = VerifyToken(token);
             if (string.IsNullOrEmpty(userIdStr))
                 return Unauthorized("Невалидный токен");
             int usId = int.Parse(userIdStr);
 
-            var items = await _context.Items
-                .Where(i => i.UserId == usId && i.IsActive == true)
+            var logs = await _context.Logs
+                .Where(i => i.UserId == usId)
                 .Select(i => new {
-                    Id = i.Item_Id,
-                    Название = i.ItemName,
-                    Цена = i.MaxBuyPrice,
+                    Id = i.Log_Id,
+                    Название = i.LogType,
+                    Цена = i.Message,
+                    Дата = i.EventTime
                 })
                 .ToListAsync();
 
-            return Ok(items);
+            return Ok(logs);
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult> AddMyItem([FromQuery] string token, [FromForm] string itemname, [FromForm] int maxBuyprice, [FromForm] bool isactive)
+        public async Task<ActionResult> AddMyLogs([FromQuery] string token, [FromForm] string logType, [FromForm] string message, [FromForm] DateTime eventTime)
         {
             var userIdStr = VerifyToken(token);
             if (string.IsNullOrEmpty(userIdStr))
                 return Unauthorized("Невалидный токен");
             int usId = int.Parse(userIdStr);
 
-            var newItem = new Items
+            var newLog = new Logs
             {
-                ItemName = itemname,
-                MaxBuyPrice = maxBuyprice,
-                IsActive = isactive,
+                LogType = logType,
+                Message = message,
+                EventTime = eventTime,
                 UserId = usId,
             };
-            _context.Items.Add(newItem);
+            _context.Logs.Add(newLog);
             await _context.SaveChangesAsync();
             return Ok(new { message = "Успешно!" });
         }
 
         [HttpPut("Edit")]
-        public async Task<ActionResult> EditMyItem([FromQuery] string token, [FromForm] int itemId, [FromForm] string itemname, [FromForm] int maxBuyprice, [FromForm] bool isactive)
+        public async Task<ActionResult> EditMyLogs([FromQuery] string token, [FromForm] int logid, [FromForm] string logType, [FromForm] string message, [FromForm] DateTime eventTime)
         {
             var userIdStr = VerifyToken(token);
             if (string.IsNullOrEmpty(userIdStr))
                 return Unauthorized("Невалидный токен");
             int usId = int.Parse(userIdStr);
 
-            var bditem = await _context.Items.FirstOrDefaultAsync(x => x.Item_Id == itemId && x.UserId == usId);
+            var bdLogs = await _context.Logs.FirstOrDefaultAsync(x => x.Log_Id == logid && x.UserId == usId);
 
-            if (bditem == null)
-                return NotFound("Предмет не найден");
+            if (bdLogs == null)
+                return NotFound("Лог не найден");
 
-            bditem.ItemName = itemname;
-            bditem.MaxBuyPrice = maxBuyprice;
-            bditem.IsActive = isactive;
+            bdLogs.LogType = logType;
+            bdLogs.Message = message;
+            bdLogs.EventTime = eventTime;
 
             await _context.SaveChangesAsync();
             return Ok(new { message = "Успешно!" });
         }
 
         [HttpDelete("Delete")]
-        public async Task<ActionResult> DeleteMyItem([FromQuery] string token, [FromForm] int itemId)
+        public async Task<ActionResult> DeleteMyLogs([FromQuery] string token, [FromForm] int logid)
         {
             var userIdStr = VerifyToken(token);
             if (string.IsNullOrEmpty(userIdStr))
                 return Unauthorized("Невалидный токен");
             int usId = int.Parse(userIdStr);
 
-            var bditem = await _context.Items.FirstOrDefaultAsync(x => x.Item_Id == itemId && x.UserId == usId);
+            var dbLogs = await _context.Logs.FirstOrDefaultAsync(x => x.Log_Id == logid && x.UserId == usId);
 
-            if (bditem == null)
+            if (dbLogs == null)
                 return NotFound("Предмет не найден");
 
-            _context.Remove(bditem);
+            _context.Remove(dbLogs);
             await _context.SaveChangesAsync();
             return Ok(new { message = "Успешно!" });
         }

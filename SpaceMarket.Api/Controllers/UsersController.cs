@@ -19,7 +19,7 @@ namespace SpaceMarket.Api.Controllers
         private readonly SpaceMarketContext _context;
         public UsersController(SpaceMarketContext context) {_context = context;}
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<ActionResult<Users>> Register([FromForm] string Usname, [FromForm] string Password)
         {
             if (await _context.Users.AnyAsync(u => u.UserName == Usname))
@@ -38,7 +38,7 @@ namespace SpaceMarket.Api.Controllers
             return Ok(new {message = "Успешно!"});
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<Users>> Login([FromForm] string Usname, [FromForm] string Password)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == Usname);
