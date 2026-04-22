@@ -26,10 +26,11 @@ namespace SpaceMarket.Api.Controllers
             var logs = await _context.Logs
                 .Where(i => i.UserId == usId)
                 .Select(i => new {
-                    Id = i.Log_Id,
-                    Название = i.LogType,
-                    Цена = i.Message,
-                    Дата = i.EventTime
+                    Log_Id = i.Log_Id,
+                    LogType = i.LogType,
+                    Message = i.Message,
+                    EventTime = i.EventTime,
+                    UserId = i.UserId
                 })
                 .ToListAsync();
 

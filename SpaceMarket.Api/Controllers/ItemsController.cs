@@ -28,9 +28,10 @@ namespace SpaceMarket.Api.Controllers
             var items = await _context.Items
                 .Where(i => i.UserId == usId && i.IsActive == true)
                 .Select(i => new {
-                    Id = i.Item_Id,
-                    Название = i.ItemName,
-                    Цена = i.MaxBuyPrice,
+                    Item_Id = i.Item_Id,
+                    ItemName = i.ItemName,
+                    MaxBuyPrice = i.MaxBuyPrice,
+                    IsActive = i.IsActive
                 })
                 .ToListAsync();
 

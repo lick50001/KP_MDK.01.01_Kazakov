@@ -1,0 +1,45 @@
+﻿<Page x:Class="Kazakov_KP_01._01.Pages.Сhecklist"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Kazakov_KP_01._01.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="Сhecklist"
+      Background="Transparent">
+    
+    <Border BorderBrush="#FF33FFFF" 
+            BorderThickness="0.42" 
+            Background="#1A1C24" 
+            CornerRadius="15"
+            HorizontalAlignment="Stretch" 
+            VerticalAlignment="Stretch"
+            Margin="0">
+
+        <DockPanel Margin="30">
+            <Grid DockPanel.Dock="Top" Margin="0,0,0,20">
+                <TextBlock Text="> Менеджер предметов" 
+                   FontSize="24" FontWeight="Bold" Foreground="#FFFFFF" 
+                   VerticalAlignment="Center" FontFamily="Exo 2"/>
+
+                <Button Content="+ Добавить предмет" 
+                HorizontalAlignment="Right"
+                Padding="15,5"
+                Background="#00FFC2" Foreground="#1A1C24"
+                FontWeight="Bold" BorderThickness="0"
+                x:Name="BtnAdd" Click="BtnAdd_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="8"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="ItemsContainer"/>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</Page>

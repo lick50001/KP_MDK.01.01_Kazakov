@@ -5,10 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kazakov_KP_01._01.Pages"
         mc:Ignorable="d"
-        Title="MainWindow" Height="718" Width="544" Background="Transparent" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize">
+        Title="MainWindow" 
+        Height="575" 
+        Width="544" 
+        Background="Transparent" 
+        WindowStyle="None" 
+        AllowsTransparency="True" 
+        ResizeMode="NoResize">
+
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-
         <Style x:Key="RoundedCheckBox" TargetType="CheckBox">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Template">
@@ -16,15 +22,15 @@
                     <ControlTemplate TargetType="CheckBox">
                         <BulletDecorator Background="Transparent">
                             <BulletDecorator.Bullet>
-                                <Border x:Name="Box" Width="12" Height="12" CornerRadius="3" 
-                                BorderBrush="#E0F7FA" BorderThickness="1.5" Background="Transparent">
+                                <Border x:Name="Box" Width="12" Height="12" CornerRadius="3"
+                                        BorderBrush="#E0F7FA" BorderThickness="1.5" Background="Transparent">
                                     <Viewbox Width="8" Height="8" x:Name="CheckMark" Visibility="Collapsed">
-                                        <Path Data="M 0,5 L 3,8 L 10,0" 
-                                      Stroke="White" 
-                                      StrokeThickness="2" 
-                                      StrokeStartLineCap="Round" 
-                                      StrokeEndLineCap="Round" 
-                                      StrokeLineJoin="Round"/>
+                                        <Path Data="M 0,5 L 3,8 L 10,0"
+                                              Stroke="White"
+                                              StrokeThickness="2"
+                                              StrokeStartLineCap="Round"
+                                              StrokeEndLineCap="Round"
+                                              StrokeLineJoin="Round"/>
                                     </Viewbox>
                                 </Border>
                             </BulletDecorator.Bullet>
@@ -48,78 +54,54 @@
 
     <Border CornerRadius="162"
             Background="#050508"
-            BorderBrush="#2D313A" 
+            BorderBrush="#2D313A"
             BorderThickness="1"
             MouseDown="Window_MouseDown">
         <Grid>
-            <Button Click="MinimizeBtn_Click" Background="Transparent" BorderBrush="#33FFFFFF" BorderThickness="1" Width="30" Height="30" Content="–" Margin="359,21,153,604" Foreground="White" FontSize="36" Padding="0 -15 0 0" VerticalAlignment="Top"/>
-
-            <Button Click="CloseBtn_Click" Background="Transparent" BorderBrush="#33FFFFFF" BorderThickness="1" Width="30" Height="30" Content="×" Margin="397,21,115,522" Foreground="White" FontSize="36" Padding="0 -15 0 0" VerticalAlignment="Top"/>
+            <Button Click="MinimizeBtn_Click" Background="Transparent" BorderBrush="#33FFFFFF" BorderThickness="1" Width="30" Height="30" Content="–" Margin="359,21,153,0" Foreground="White" FontSize="36" Padding="0 -15 0 0" VerticalAlignment="Top"/>
+            <Button Click="CloseBtn_Click" Background="Transparent" BorderBrush="#33FFFFFF" BorderThickness="1" Width="30" Height="30" Content="×" Margin="397,21,115,0" Foreground="White" FontSize="36" Padding="0 -15 0 0" VerticalAlignment="Top"/>
 
             <Border CornerRadius="39"
-                Background="#1A1C24"
-                BorderBrush="#2D313A" 
-                BorderThickness="1"
-                Width="338"
-                Height="574">
-
+                    Background="#1A1C24"
+                    BorderBrush="#2D313A"
+                    BorderThickness="1"
+                    Width="338"
+                    Height="431"
+                    VerticalAlignment="Center"
+                    Margin="0,30,0,0">
                 <Border.Effect>
-                    <DropShadowEffect 
-                           BlurRadius="15" 
-                           Color="#FFFFFF" 
-                           Opacity="0.6" 
-                           ShadowDepth="3"
-                           Direction="270"/>
+                    <DropShadowEffect BlurRadius="15" Color="#FFFFFF" Opacity="0.6" ShadowDepth="3" Direction="270"/>
                 </Border.Effect>
 
                 <Grid>
-                    <Label Content="Авторизация" FontFamily="Exo 2" FontSize="36" Foreground="#FFFFFF" FontWeight="Bold" Margin="53,24,38,351">
+                    <Label Content="Регистрация" FontFamily="Exo 2" FontSize="36" Foreground="#FFFFFF" FontWeight="Bold" Margin="53,24,38,351">
                         <Label.Effect>
-                            <DropShadowEffect
-                            BlurRadius="15" 
-                            Color="#FFFFFF" 
-                            Opacity="0.6" 
-                            ShadowDepth="4"
-                            Direction="270"/>
+                            <DropShadowEffect BlurRadius="15" Color="#FFFFFF" Opacity="0.6" ShadowDepth="4" Direction="270"/>
                         </Label.Effect>
                     </Label>
 
-                    <Image Source="/Images/Udr_TB.png" 
-                       Stretch="Uniform" 
-                       IsHitTestVisible="False" 
-                       VerticalAlignment="Top" Height="38" Margin="0,149,2,0"/>
+                    <Button Click="LogIn_Click" Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#FFFFFF" BorderThickness="0" Content="Войти в аккаунт" HorizontalAlignment="Center" Margin="0,320,0,0" VerticalAlignment="Top"/>
 
-                    <Image Source="/Images/Udr_TB_V2.png"                           
-                           Stretch="Uniform" 
-                           IsHitTestVisible="False" 
-                           VerticalAlignment="Top" Height="45" Margin="11,222,12,0"/>
-
-                    <Button Click="LogIn_Click" Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#FFFFFF" BorderThickness="0" Content="Войти в аккаунт" HorizontalAlignment="Center" Margin="0,0,0,94" VerticalAlignment="Bottom"/>
                     <Grid Height="73" Margin="18,0,18,23" VerticalAlignment="Bottom">
-
-                        <Image Source="/Images/Upr_Btn.png"                           
-                            Stretch="Uniform" 
-                            IsHitTestVisible="False" 
-                            VerticalAlignment="Top" Height="30" Margin="0,0,258,0"/>
-
-                        <Image Source="/Images/Upr_Btn.png"                           
-                            Stretch="Uniform" 
-                            IsHitTestVisible="False" 
-                            VerticalAlignment="Top" Height="30" Margin="258,43,0,0"/>
-
+                        <Image Source="/Images/Upr_Btn.png"
+                               Stretch="Uniform"
+                               IsHitTestVisible="False"
+                               VerticalAlignment="Top" Height="30" Margin="0,0,258,0"/>
+                        <Image Source="/Images/Upr_Btn.png"
+                               Stretch="Uniform"
+                               IsHitTestVisible="False"
+                               VerticalAlignment="Top" Height="30" Margin="258,43,0,0"/>
                         <Button Click="ClickToMain" Background="#E0F7FA" Width="256" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0">
                             <Button.Template>
                                 <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border Background="{TemplateBinding Background}" 
-                                        CornerRadius="0,10,0,10">
-
-                                        <TextBlock Text="Зарегистрироваться" 
-                                            Foreground="#0B0C15"
-                                            FontFamily="Exo 2"
-                                            FontWeight="Bold"
-                                            FontSize="18" 
-                                            HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="0,10,0,10">
+                                        <TextBlock Text="Зарегистрироваться"
+                                                   Foreground="#0B0C15"
+                                                   FontFamily="Exo 2"
+                                                   FontWeight="Bold"
+                                                   FontSize="18"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center">
                                             <TextBlock.LayoutTransform>
                                                 <ScaleTransform ScaleX="1.1" />
                                             </TextBlock.LayoutTransform>
@@ -129,57 +111,29 @@
                             </Button.Template>
                         </Button>
                     </Grid>
-                    <Image Source="/Images/Udr_TB.png" 
-                        Stretch="Uniform" 
-                        IsHitTestVisible="False" 
-                        VerticalAlignment="Top" Height="38" Margin="0,298,2,0"/>
-                    <Image Source="/Images/Udr_TB_V2.png"                           
-                        Stretch="Uniform" 
-                        IsHitTestVisible="False" 
-                        VerticalAlignment="Top" Height="45" Margin="11,371,12,0"/>
-                    <TextBox Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Пароль" Margin="53,365,53,182" Width="230" Height="25">
+
+                    <Image Source="/Images/Udr_TB.png"
+                           Stretch="Uniform"
+                           IsHitTestVisible="False"
+                           VerticalAlignment="Top" Height="38" Margin="0,152,2,0"/>
+                    <Image Source="/Images/Udr_TB_V2.png"
+                           Stretch="Uniform"
+                           IsHitTestVisible="False"
+                           VerticalAlignment="Top" Height="45" Margin="11,225,12,0"/>
+
+                    <TextBox x:Name="tb_login" Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Логин" Margin="53,143,53,0" Width="230" Height="25" VerticalAlignment="Top">
                         <TextBox.Effect>
-                            <DropShadowEffect
-                                BlurRadius="4" 
-                                Color="#000000" 
-                                Opacity="0.6" 
-                                ShadowDepth="2"
-                                Direction="270"/>
+                            <DropShadowEffect BlurRadius="4" Color="#000000" Opacity="0.6" ShadowDepth="2" Direction="270"/>
                         </TextBox.Effect>
                     </TextBox>
-                    <TextBox Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Почта" Margin="53,289,53,258" Width="230">
+
+                    <TextBox x:Name="tb_password" Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Пароль" Margin="53,216,53,0" Width="230" Height="25" VerticalAlignment="Top">
                         <TextBox.Effect>
-                            <DropShadowEffect
-                                BlurRadius="4" 
-                                Color="#000000" 
-                                Opacity="0.6" 
-                                ShadowDepth="2"
-                                Direction="270"/>
-                        </TextBox.Effect>
-                    </TextBox>
-                    <TextBox Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Имя" Margin="53,219,53,328" Width="230" Height="25">
-                        <TextBox.Effect>
-                            <DropShadowEffect
-                                BlurRadius="4" 
-                                Color="#000000" 
-                                Opacity="0.6" 
-                                ShadowDepth="2"
-                                Direction="270"/>
-                        </TextBox.Effect>
-                    </TextBox>
-                    <TextBox Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Фамилия" Margin="53,143,53,404" Width="230">
-                        <TextBox.Effect>
-                            <DropShadowEffect
-                                BlurRadius="4" 
-                                Color="#000000" 
-                                Opacity="0.6" 
-                                ShadowDepth="2"
-                                Direction="270"/>
+                            <DropShadowEffect BlurRadius="4" Color="#000000" Opacity="0.6" ShadowDepth="2" Direction="270"/>
                         </TextBox.Effect>
                     </TextBox>
                 </Grid>
             </Border>
         </Grid>
-
     </Border>
 </Window>

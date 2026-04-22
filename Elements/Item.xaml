@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Kazakov_KP_01._01.Elements.Item"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="60">
+    <Border Background="#252833" CornerRadius="10" Margin="0,4" x:Name="MainBorder">
+        <Grid Margin="20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="TxtName" 
+                       Text="Siberian Kitten Food" 
+                       Foreground="White" 
+                       FontSize="16" 
+                       VerticalAlignment="Center" 
+                       FontFamily="Exo 2"
+                       TextTrimming="CharacterEllipsis"/>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
+                <TextBlock Text="MAX:" Foreground="#6E7485" FontSize="12" VerticalAlignment="Center" Margin="0,2,8,0"/>
+                <TextBlock x:Name="TxtPrice" Text="50 000" Foreground="#00FFC2" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                <Button Click="EditItm" x:Name="BtnEdit" Content="✎" Width="32" Height="32" Margin="0,0,8,0"
+        Background="#33FFFFFF" Foreground="White" BorderThickness="0" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button Click="DeleteItm" x:Name="BtnDelete" Content="🗑" Width="32" Height="32"
+        Background="#26FF4D4D" Foreground="#FF4D4D" BorderThickness="0" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

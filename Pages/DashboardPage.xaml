@@ -7,66 +7,69 @@
       d:DesignHeight="800" d:DesignWidth="1500"
       Title="DashboardPage" Background="Transparent">
 
-    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
-        <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Margin="0 0 0 30">
-                <Border Width="347" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
-                    <StackPanel Margin="30">
-                        <TextBlock Text="ВРЕМЯ РАБОТЫ" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                        <TextBlock Text="42ч 15м" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
-                        <TextBlock Text="Без перезагрузок" FontSize="18" FontWeight="SemiBold" Foreground="#00FFC2" FontFamily="Exo 2"/>
-                    </StackPanel>
-                </Border>
+        <!-- Карточки -->
+        <UniformGrid Grid.Row="0" Columns="4" Margin="0,0,0,20">
 
-                <Border Width="347" Height="192" Margin="30 0 0 0" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
-                    <StackPanel Margin="30">
-                        <TextBlock Text="ПОДПИСКА" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                        <TextBlock Text="12 ДНЕЙ" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#00FFC2" FontFamily="Exo 2"/>
-                        <TextBlock Text="Тариф: Ultra" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
-                    </StackPanel>
-                </Border>
-
-                <Border Width="347" Height="192" Margin="30 0 0 0" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
-                    <StackPanel Margin="30">
-                        <TextBlock Text="ПРИБЫЛЬ (24ч)" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                        <TextBlock Text="$151,521" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
-                        <TextBlock Text="+15% к вчера" FontSize="18" FontWeight="SemiBold" Foreground="#00FFC2" FontFamily="Exo 2"/>
-                    </StackPanel>
-                </Border>
-
-                <Border Width="339" Height="192" Margin="30 0 0 0" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
-                    <StackPanel Margin="30">
-                        <TextBlock Text="ПРИБЫЛЬ (Сеанс)" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                        <TextBlock Text="$38,151" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
-                        <TextBlock Text="-45% от сеанса" FontSize="18" FontWeight="SemiBold" Foreground="#FF4D4D" FontFamily="Exo 2"/>
-                    </StackPanel>
-                </Border>
-            </StackPanel>
-
-            <Border Width="1470" Height="350" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15" HorizontalAlignment="Left">
-                <Grid Margin="30">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="> ПОСЛЕДНИЕ СОБЫТИЯ" FontSize="24" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,15" FontFamily="Exo 2"/>
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel x:Name="LogsContainer">
-                            <Grid Margin="0,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="10:42:04" Foreground="#44FFFFFF" FontSize="18" FontFamily="Exo 2"/>
-                                <TextBlock Grid.Column="1" Text="Успешная покупка" Foreground="White" FontSize="18" Margin="20,0,0,0" FontFamily="Exo 2"/>
-                                <TextBlock Grid.Column="2" Text="-2,500" Foreground="#FF4B4B" FontSize="18" FontWeight="Bold" FontFamily="Exo 2"/>
-                            </Grid>
-                        </StackPanel>
-                    </ScrollViewer>
-                </Grid>
+            <Border Margin="0,0,10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
+                <StackPanel Margin="30">
+                    <TextBlock Text="ВРЕМЯ РАБОТЫ" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
+                    <TextBlock Text="42ч 15м" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
+                    <TextBlock Text="Без перезагрузок" FontSize="18" FontWeight="SemiBold" Foreground="#00FFC2" FontFamily="Exo 2"/>
+                </StackPanel>
             </Border>
-        </StackPanel>
+
+            <Border Margin="10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
+                <StackPanel Margin="30">
+                    <TextBlock Text="ПОДПИСКА" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
+                    <TextBlock Text="12 ДНЕЙ" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#00FFC2" FontFamily="Exo 2"/>
+                    <TextBlock Text="Тариф: Ultra" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
+                </StackPanel>
+            </Border>
+
+            <Border Margin="10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
+                <StackPanel Margin="30">
+                    <TextBlock Text="ПРИБЫЛЬ (24ч)" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
+                    <TextBlock Text="$151,521" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
+                    <TextBlock Text="+15% к вчера" FontSize="18" FontWeight="SemiBold" Foreground="#00FFC2" FontFamily="Exo 2"/>
+                </StackPanel>
+            </Border>
+
+            <Border Margin="10,0,0,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
+                <StackPanel Margin="30">
+                    <TextBlock Text="ПРИБЫЛЬ (Сеанс)" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
+                    <TextBlock Text="$38,151" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
+                    <TextBlock Text="-45% от сеанса" FontSize="18" FontWeight="SemiBold" Foreground="#FF4D4D" FontFamily="Exo 2"/>
+                </StackPanel>
+            </Border>
+
+        </UniformGrid>
+
+        <!-- Логи -->
+        <Border Grid.Row="1"
+                BorderBrush="#FF33FFFF"
+                BorderThickness="0.42"
+                Background="#1A1C24"
+                CornerRadius="15">
+            <DockPanel Margin="30">
+                <TextBlock DockPanel.Dock="Top"
+                           Text="> Последние события"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="#FFFFFF"
+                           Margin="0,0,0,15"
+                           FontFamily="Exo 2"/>
+                <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="LogsContainer"/>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
     </Grid>
 </Page>

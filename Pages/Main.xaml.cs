@@ -34,6 +34,7 @@ namespace Kazakov_KP_01._01.Pages
         {
             Big_Circle.Visibility = Visibility.Visible;
             Little_Circle.Visibility = Visibility.Hidden;
+            MainFrame.Navigate(new Сhecklist());
             UpdateUI("Btn_Price", "// МОНИТОР ЦЕН");
         }
 

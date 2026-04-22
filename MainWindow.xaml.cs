@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Kazakov_KP_01._01.Classes;
+using Kazakov_KP_01._01.Services;
 
 namespace Kazakov_KP_01._01
 {
@@ -20,6 +22,7 @@ namespace Kazakov_KP_01._01
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly ApiService _api = new ApiService();
         public MainWindow()
         {
             InitializeComponent();
@@ -54,13 +57,22 @@ namespace Kazakov_KP_01._01
             RW.Show();
         }
 
-        private void ClickToMain(object sender, RoutedEventArgs e)
+        private async void ClickToMain(object sender, RoutedEventArgs e)
         {
-            Pages.Main mm = new Pages.Main();
+            string login = tb_login.Text;
+            string pass = tb_password.Text;
 
+            string token = await _api.LoginAsync(login, pass);
+            if (token == null)
+            {
+                MessageBox.Show("Неверный логин или пароль!");
+                return;
+            }
+            UserSession.Token = token;
+
+            Pages.Main mm = new Pages.Main();
             mm.Left = this.Left;
             mm.Top = this.Top;
-
             this.Close();
             mm.Show();
         }

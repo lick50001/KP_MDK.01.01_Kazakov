@@ -22,7 +22,7 @@
 
                         <TextBlock x:Name="Btn_Home" Text="// ГЛАВНАЯ" Cursor="Hand" MouseDown="Nav_Home" FontSize="24" FontWeight="SemiBold" Foreground="White" Margin="74 0 0 30"/>
                         <TextBlock x:Name="Btn_Func" Text="// ФУНКЦИИ" Cursor="Hand" MouseDown="Nav_Func" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 30"/>
-                        <TextBlock x:Name="Btn_Price" Text="// МОНИТОР ЦЕН" Cursor="Hand" MouseDown="Nav_Price" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 30"/>
+                        <TextBlock x:Name="Btn_Price" Text="// СПИСКИ" Cursor="Hand" MouseDown="Nav_Price" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 30"/>
                         <TextBlock x:Name="Btn_Finance" Text="// ФИНАНСЫ" Cursor="Hand" MouseDown="Nav_Finance" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 0"/>
                     </StackPanel>
 

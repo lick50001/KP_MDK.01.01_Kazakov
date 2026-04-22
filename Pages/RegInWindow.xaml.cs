@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kazakov_KP_01._01.Classes;
+using Kazakov_KP_01._01.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,7 @@ namespace Kazakov_KP_01._01.Pages
     /// </summary>
     public partial class RegInWindow : Window
     {
+        private readonly ApiService _api = new ApiService();
         public RegInWindow()
         {
             InitializeComponent();
@@ -50,15 +53,24 @@ namespace Kazakov_KP_01._01.Pages
             mw.Show();
         }
 
-        private void ClickToMain(object sender, RoutedEventArgs e)
+        private async void ClickToMain(object sender, RoutedEventArgs e)
         {
-            Pages.Main mm = new Pages.Main();
+            string login = tb_login.Text;
+            string pass = tb_password.Text;
 
-            mm.Left = this.Left;
-            mm.Top = this.Top;
+            string result = await _api.RegisterAsync(login, pass);
+            if (result != "Success")
+            {
+                string finalError = string.IsNullOrEmpty(result) ? "Ошибка регистрации" : result;
+                MessageBox.Show(finalError);
+                return;
+            }
 
+            MainWindow mw = new MainWindow();
+            mw.Left = this.Left;
+            mw.Top = this.Top;
+            mw.Show();
             this.Close();
-            mm.Show();
         }
     }
 }

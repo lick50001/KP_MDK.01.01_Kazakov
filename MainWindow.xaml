@@ -90,7 +90,7 @@
                        IsHitTestVisible="False" 
                        VerticalAlignment="Top" Height="38" Margin="0,149,2,0"/>
 
-                    <TextBox Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Почта" Margin="53,143,53,261" Width="230" Height="25">
+                    <TextBox x:Name="tb_login" Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Логин" Margin="53,143,53,261" Width="230" Height="25">
                         <TextBox.Effect>
                             <DropShadowEffect
                                 BlurRadius="4" 
@@ -106,7 +106,7 @@
                            IsHitTestVisible="False" 
                            VerticalAlignment="Top" Height="45" Margin="11,222,12,0"/>
 
-                    <TextBox Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Пароль" Margin="53,220,54,184" Width="230" Height="25">
+                    <TextBox x:Name="tb_password" Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Пароль" Margin="53,220,54,184" Width="230" Height="25">
                         <TextBox.Effect>
                             <DropShadowEffect
                                 BlurRadius="4" 
