@@ -1,0 +1,164 @@
+﻿<Window x:Class="Kazakov_KP_01._01.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kazakov_KP_01._01"
+        mc:Ignorable="d"
+        Title="MainWindow" WindowStartupLocation="Manual" Height="575" Width="544" Background="Transparent" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <Style x:Key="RoundedCheckBox" TargetType="CheckBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <BulletDecorator Background="Transparent">
+                            <BulletDecorator.Bullet>
+                                <Border x:Name="Box" Width="12" Height="12" CornerRadius="3" 
+                                BorderBrush="#E0F7FA" BorderThickness="1.5" Background="Transparent">
+                                    <Viewbox Width="8" Height="8" x:Name="CheckMark" Visibility="Collapsed">
+                                        <Path Data="M 0,5 L 3,8 L 10,0" 
+                                      Stroke="White" 
+                                      StrokeThickness="2" 
+                                      StrokeStartLineCap="Round" 
+                                      StrokeEndLineCap="Round" 
+                                      StrokeLineJoin="Round"/>
+                                    </Viewbox>
+                                </Border>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter Margin="6,0,0,0" VerticalAlignment="Center"/>
+                        </BulletDecorator>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="White"/>
+                                <Setter TargetName="Box" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="162"
+            Background="#050508"
+            BorderBrush="#2D313A" 
+            BorderThickness="1"
+            MouseDown="Window_MouseDown">
+        <Grid>
+            <Button Click="MinimizeBtn_Click" Background="Transparent" BorderBrush="#33FFFFFF" BorderThickness="1" Width="30" Height="30" Content="–" Margin="359,21,153,522" Foreground="White" FontSize="36" Padding="0 -15 0 0"/>
+
+            <Button Click="CloseBtn_Click" Background="Transparent" BorderBrush="#33FFFFFF" BorderThickness="1" Width="30" Height="30" Content="×" Margin="397,21,115,522" Foreground="White" FontSize="36" Padding="0 -15 0 0"/>
+
+            <Border CornerRadius="39"
+                Background="#1A1C24"
+                BorderBrush="#2D313A" 
+                BorderThickness="1"
+                Width="338"
+                Height="431">
+
+                <Border.Effect>
+                    <DropShadowEffect 
+                           BlurRadius="15" 
+                           Color="#FFFFFF" 
+                           Opacity="0.6" 
+                           ShadowDepth="3"
+                           Direction="270"/>
+                </Border.Effect>
+
+                <Grid>
+                    <Label Content="Авторизация" FontFamily="Exo 2" FontSize="36" Foreground="#FFFFFF" FontWeight="Bold" Margin="53,24,38,351">
+                        <Label.Effect>
+                            <DropShadowEffect
+                            BlurRadius="15" 
+                            Color="#FFFFFF" 
+                            Opacity="0.6" 
+                            ShadowDepth="4"
+                            Direction="270"/>
+                        </Label.Effect>
+                    </Label>
+
+                    <Image Source="/Images/Udr_TB.png" 
+                       Stretch="Uniform" 
+                       IsHitTestVisible="False" 
+                       VerticalAlignment="Top" Height="38" Margin="0,149,2,0"/>
+
+                    <TextBox Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Почта" Margin="53,143,53,261" Width="230" Height="25">
+                        <TextBox.Effect>
+                            <DropShadowEffect
+                                BlurRadius="4" 
+                                Color="#000000" 
+                                Opacity="0.6" 
+                                ShadowDepth="2"
+                                Direction="270"/>
+                        </TextBox.Effect>
+                    </TextBox>
+
+                    <Image Source="/Images/Udr_TB_V2.png"                           
+                           Stretch="Uniform" 
+                           IsHitTestVisible="False" 
+                           VerticalAlignment="Top" Height="45" Margin="11,222,12,0"/>
+
+                    <TextBox Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Пароль" Margin="53,220,54,184" Width="230" Height="25">
+                        <TextBox.Effect>
+                            <DropShadowEffect
+                                BlurRadius="4" 
+                                Color="#000000" 
+                                Opacity="0.6" 
+                                ShadowDepth="2"
+                                Direction="270"/>
+                        </TextBox.Effect>
+                    </TextBox>
+
+                    <CheckBox Style="{StaticResource RoundedCheckBox}" FontSize="12" FontFamily="Exo 2" Foreground="#6E7485" Background="Transparent" Content="Запомнить меня" HorizontalAlignment="Left" Margin="54,255,0,0" VerticalAlignment="Top"/>
+
+                    <Rectangle HorizontalAlignment="Left"  Height="8" Margin="177,259,0,0" Stroke="#FFFFFF" VerticalAlignment="Top" Width="1"/>
+
+                    <Button Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#6E7485" BorderThickness="0" Content="Забыли пароль?" HorizontalAlignment="Left" Margin="192,254,0,0" VerticalAlignment="Top"/>
+
+                    <Button Click="NewReg_Click" Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#FFFFFF" BorderThickness="0" Content="Зарегистрироваться" HorizontalAlignment="Center" Margin="0,327,0,0" VerticalAlignment="Top"/>
+
+                    <Image Source="/Images/Upr_Btn.png"                           
+                           Stretch="Uniform" 
+                           IsHitTestVisible="False" 
+                           VerticalAlignment="Top" Height="30" Margin="18,340,276,0"/>
+
+                    <Image Source="/Images/Upr_Btn.png"                           
+                            Stretch="Uniform" 
+                            IsHitTestVisible="False" 
+                            VerticalAlignment="Top" Height="30" Margin="276,383,18,0"/>
+
+                    <Button Click="ClickToMain" Background="#E0F7FA" Width="255" Height="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,356,0,0" BorderThickness="0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" 
+                    CornerRadius="0,10,0,10">
+
+                                    <TextBlock Text="Авторизоваться" 
+                           Foreground="#0B0C15"
+                           FontFamily="Exo 2"
+                           FontWeight="Bold"
+                           FontSize="18" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center">
+                                        <TextBlock.LayoutTransform>
+                                            <ScaleTransform ScaleX="1.1" />
+                                        </TextBlock.LayoutTransform>
+                                    </TextBlock>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+
+    </Border>
+</Window>

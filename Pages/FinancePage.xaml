@@ -1,0 +1,74 @@
+﻿<Page x:Class="Kazakov_KP_01._01.Pages.FinancePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="1500"
+      Title="FinancePage">
+
+    <Grid Margin="0,0,30,0" HorizontalAlignment="Left" Width="1470">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="724"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Orientation="Vertical">
+
+            <Border Width="724" Height="363" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
+                <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                    <StackPanel Margin="30">
+                        <TextBlock Text="Распределение" FontSize="24" Foreground="#FFFFFF" FontWeight="Bold" FontFamily="Exo 2"/>
+                        <TextBlock Text="Броня" Foreground="#6E7485" FontSize="24" FontWeight="SemiBold" Margin="0 30 0 5" FontFamily="Exo 2"/>
+                        <ProgressBar Value="12" Maximum="30" Height="7" Margin="0,0,0,30" Foreground="#00FFC2" Background="#252831">
+                            <ProgressBar.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="3"/>
+                                </Style>
+                            </ProgressBar.Resources>
+                        </ProgressBar>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Border Width="724" Height="363" BorderBrush="#FF33FFFF" Margin="0 30 0 0" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
+                <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                    <StackPanel Margin="30">
+                        <TextBlock Text="История операций" FontSize="24" Foreground="#FFFFFF" FontWeight="Bold" FontFamily="Exo 2" Margin="0 0 0 20"/>
+
+                        <StackPanel>
+                            <Grid Margin="0 10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="10:42:04" Foreground="#44FFFFFF" FontSize="18" FontFamily="Exo 2" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="Успешная покупка" Foreground="White" FontSize="18" Margin="40,0,0,0" FontFamily="Exo 2" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="-2,500" Foreground="#FF4B4B" FontSize="18" FontWeight="Bold" FontFamily="Exo 2" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <Border Height="1" Background="#1FFFFFFF" SnapsToDevicePixels="True" Margin="0 5"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </StackPanel>
+
+        <Grid Grid.Column="1">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <StackPanel Margin="0 -228 0 0" HorizontalAlignment="Center">
+                    <TextBlock Text="Общий профит:" Foreground="#6E7485" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 0 0 40" FontFamily="Exo 2"/>
+                    <TextBlock Text="+$258,892" Foreground="#00FFC2" FontSize="128" FontWeight="Bold" HorizontalAlignment="Center" FontFamily="Exo 2">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="#00FFC2" BlurRadius="20" ShadowDepth="0" Opacity="0.5"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>   
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Page>

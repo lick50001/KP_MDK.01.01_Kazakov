@@ -1,0 +1,58 @@
+﻿<Window x:Class="Kazakov_KP_01._01.Pages.Main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="1080" Width="1920" Background="#050508" WindowStyle="None" AllowsTransparency="True" 
+        MouseDown="Window_MouseDown" WindowState="Maximized" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="420"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="Big_Circle" Margin="243,-121,0,-56" Width="1257" Height="1257" Source="/Images/BG_Circle.png" Grid.Column="1" IsHitTestVisible="False" />
+
+        <Image x:Name="Little_Circle" Margin="610,0,0,0" Width="1000" Height="1000" Source="/Images/BG_Circle_Full.png" Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center" Visibility="Hidden"/>
+
+        <Grid Grid.Column="0" Margin="30 30">
+            <Border Background="#0F1016" CornerRadius="20" BorderBrush="#33FFFFFF" BorderThickness="1">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="Market_Flow" HorizontalAlignment="Center" Margin="0 50 0 0" Foreground="#00FFC2" FontSize="36" FontWeight="Bold" FontFamily="Exo 2"/>
+                        <TextBlock Text="v.1.0.0" FontSize="14" Foreground="#6E7485" HorizontalAlignment="Right" Margin="0 0 76 60"/>
+
+                        <TextBlock x:Name="Btn_Home" Text="// ГЛАВНАЯ" Cursor="Hand" MouseDown="Nav_Home" FontSize="24" FontWeight="SemiBold" Foreground="White" Margin="74 0 0 30"/>
+                        <TextBlock x:Name="Btn_Func" Text="// ФУНКЦИИ" Cursor="Hand" MouseDown="Nav_Func" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 30"/>
+                        <TextBlock x:Name="Btn_Price" Text="// МОНИТОР ЦЕН" Cursor="Hand" MouseDown="Nav_Price" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 30"/>
+                        <TextBlock x:Name="Btn_Finance" Text="// ФИНАНСЫ" Cursor="Hand" MouseDown="Nav_Finance" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 0"/>
+                    </StackPanel>
+
+                    <Border Width="313" Height="118" Background="#252831" CornerRadius="9" VerticalAlignment="Bottom" Margin="22" BorderBrush="#FF33FFFF" BorderThickness="0.3">
+                        <StackPanel Margin="15 10">
+                            <TextBlock Text="Admin: Lick5001" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock Text="Подписка: Ultra" Foreground="#00FFC2" FontSize="18"/>
+                            <ProgressBar Value="12" Maximum="30" Height="4" Margin="0,15,0,0" Foreground="#D9D9D9" Background="Transparent"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Column="1" Margin="0 30 30 30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Height="50" Margin="0 0 0 50">
+                <TextBlock x:Name="txtHeader" Text="// ГЛАВНАЯ" FontSize="36" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Click="MinimizeBtn_Click" Content="–" Background="Transparent" Foreground="White" Width="35" Height="35" FontSize="20" BorderBrush="#33FFFFFF" Cursor="Hand"/>
+                    <Button Click="CloseBtn_Click" Content="×" Background="Transparent" Foreground="White" Width="35" Height="35" FontSize="20" BorderBrush="#33FFFFFF" Margin="10 0 0 0" Cursor="Hand"/>
+                </StackPanel>
+            </Grid>
+
+            <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"/>
+        </Grid>
+    </Grid>
+</Window>
