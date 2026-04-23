@@ -59,14 +59,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\SessionManager.cs" />
     <Compile Include="IntToVisibilityConverter.cs" />
-    <Compile Include="Classes\UserSession.cs" />
     <Compile Include="Elements\Item.xaml.cs">
       <DependentUpon>Item.xaml</DependentUpon>
     </Compile>
     <Compile Include="Elements\Log.xaml.cs">
       <DependentUpon>Log.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Pages\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>

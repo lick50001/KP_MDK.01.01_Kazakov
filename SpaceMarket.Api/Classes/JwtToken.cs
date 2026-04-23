@@ -26,5 +26,28 @@ namespace SpaceMarket.Api.Classes
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public static ClaimsPrincipal ValidateToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("Super-Secret-Key-12345-Don-Not-Share");
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

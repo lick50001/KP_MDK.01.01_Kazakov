@@ -28,7 +28,7 @@
 
                     <Border Width="313" Height="118" Background="#252831" CornerRadius="9" VerticalAlignment="Bottom" Margin="22" BorderBrush="#FF33FFFF" BorderThickness="0.3">
                         <StackPanel Margin="15 10">
-                            <TextBlock Text="Admin: Lick5001" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="tb_Role" Text="Admin: Lick5001" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
                             <TextBlock Text="Подписка: Ultra" Foreground="#00FFC2" FontSize="18"/>
                             <ProgressBar Value="12" Maximum="30" Height="4" Margin="0,15,0,0" Foreground="#D9D9D9" Background="Transparent"/>
                         </StackPanel>

@@ -33,6 +33,21 @@ namespace Kazakov_KP_01._01.Services
             }
             return null;
         }
+
+        public async Task<Users> GetCurrentUserAsync()
+        {
+            var response = await _client.GetAsync($"Users/GetCurrent?token={SessionManager.Token}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var user = JsonConvert.DeserializeObject<Users>(json);
+                return user;
+            }
+
+            return null;
+        }
+
         public async Task<string> RegisterAsync(string username, string password, string level)
         {
             var content = new MultipartFormDataContent();
@@ -53,7 +68,7 @@ namespace Kazakov_KP_01._01.Services
         // ЛОГИ
         public async Task<List<Logs>> GetLogAsync()
         {
-            var response = await _client.GetAsync($"Log/Get?token={UserSession.Token}");
+            var response = await _client.GetAsync($"Log/Get?token={SessionManager.Token}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -70,7 +85,7 @@ namespace Kazakov_KP_01._01.Services
             content.Add(new StringContent(message), "message");
             content.Add(new StringContent(DateTime.Now.ToString("o")), "eventTime");
 
-            var response = await _client.PostAsync($"Log/Add?token={UserSession.Token}", content);
+            var response = await _client.PostAsync($"Log/Add?token={SessionManager.Token}", content);
 
             if (response.IsSuccessStatusCode)
                 return "Success"; 
@@ -84,7 +99,7 @@ namespace Kazakov_KP_01._01.Services
         // ПРЕДММЕТЫ
         public async Task<List<Items>> GetItemAsync()
         {
-            var response = await _client.GetAsync($"Items/Get?token={UserSession.Token}");
+            var response = await _client.GetAsync($"Items/Get?token={SessionManager.Token}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -97,7 +112,7 @@ namespace Kazakov_KP_01._01.Services
 
         public async Task<Items> GetItemByIdAsync(int id)
         {
-            var response = await _client.GetAsync($"Items/{id}?token={UserSession.Token}");
+            var response = await _client.GetAsync($"Items/{id}?token={SessionManager.Token}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -115,7 +130,7 @@ namespace Kazakov_KP_01._01.Services
             content.Add(new StringContent(maxBuyprice.ToString()), "maxBuyprice");
             content.Add(new StringContent(isactive.ToString().ToLower()), "isactive");
 
-            var response = await _client.PostAsync($"Items/Add?token={UserSession.Token}", content);
+            var response = await _client.PostAsync($"Items/Add?token={SessionManager.Token}", content);
 
             if (response.IsSuccessStatusCode)
                 return "Success";
@@ -133,7 +148,7 @@ namespace Kazakov_KP_01._01.Services
             content.Add(new StringContent(maxBuyprice.ToString()), "maxBuyprice");
             content.Add(new StringContent(isactive.ToString().ToLower()), "isactive");
 
-            var request = new HttpRequestMessage(HttpMethod.Put, $"Items/Edit?token={UserSession.Token}")
+            var request = new HttpRequestMessage(HttpMethod.Put, $"Items/Edit?token={SessionManager.Token}")
             {
                 Content = content
             };
@@ -154,7 +169,7 @@ namespace Kazakov_KP_01._01.Services
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(itemId.ToString()), "itemId");
 
-            var request = new HttpRequestMessage(HttpMethod.Delete, $"Items/Delete?token={UserSession.Token}")
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"Items/Delete?token={SessionManager.Token}")
             {
                 Content = content
             };

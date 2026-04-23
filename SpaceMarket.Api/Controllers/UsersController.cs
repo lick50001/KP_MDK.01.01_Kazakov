@@ -52,7 +52,34 @@ namespace SpaceMarket.Api.Controllers
                 return Unauthorized("Ошибка: Неверный логин или пароль!");
 
             string token = JwtToken.Generate(user);
-            return Ok(new { token = token });
+            return Ok(new
+            {
+                token = token,
+                userId = user.UserId,
+                userName = user.UserName,
+                levelRoot = user.LevelRoot
+            });
         }
+
+        [HttpGet("GetCurrent")]
+        public async Task<ActionResult<Users>> GetCurrentUser([FromQuery] string token)
+        {
+            var principal = JwtToken.ValidateToken(token);
+            if (principal == null)
+                return Unauthorized("Неверный токен");
+
+            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                return BadRequest("Не удалось определить пользователя");
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return NotFound("Пользователь не найден");
+
+            user.PwdHash = null;
+
+            return Ok(user);
+        }
+       
     }
 }

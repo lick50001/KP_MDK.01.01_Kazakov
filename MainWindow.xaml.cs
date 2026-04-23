@@ -68,7 +68,7 @@ namespace Kazakov_KP_01._01
                 MessageBox.Show("Неверный логин или пароль!");
                 return;
             }
-            UserSession.Token = token;
+            SessionManager.Token = token;
 
             Pages.Main mm = new Pages.Main();
             mm.Left = this.Left;

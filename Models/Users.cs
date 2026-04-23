@@ -11,5 +11,6 @@ namespace Kazakov_KP_01._01.Models
         public int UserId { get; set; }
         public string UserName { get; set; }
         public string PwdHash { get; set; }
+        public string LevelRoot { get; set; }
     }
 }

@@ -1,17 +1,36 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Kazakov_KP_01._01.Models;
+using Kazakov_KP_01._01.Services;
 
 namespace Kazakov_KP_01._01.Pages
 {
     public partial class Main : Window
     {
+        private ApiService _api = new ApiService();
+        public Users _currentUser;   
+
         public Main()
         {
             InitializeComponent();
-
+            Loaded += Main_Loaded;
             MainFrame.Navigate(new DashboardPage());
+        }
+
+        private async void Main_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadDataUserAsync();
+        }
+        private async Task LoadDataUserAsync()
+        {
+            _currentUser = await _api.GetCurrentUserAsync();
+            if (_currentUser != null)
+                tb_Role.Text = $"{_currentUser.LevelRoot}: {_currentUser.UserName}";
+            else
+                tb_Role.Text = "Не авторизирован";
         }
 
         private void Nav_Home(object sender, MouseButtonEventArgs e)
