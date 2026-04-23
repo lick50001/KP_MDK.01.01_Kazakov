@@ -132,7 +132,7 @@ namespace Kazakov_KP_01._01.Services
         public async Task<string> DeleteItemAsync(int itemId)
         {
             var content = new MultipartFormDataContent();
-            content.Add(new StringContent(itemId.ToString()), "itemd");
+            content.Add(new StringContent(itemId.ToString()), "itemId");
 
             var request = new HttpRequestMessage(HttpMethod.Delete, $"Items/Delete?token={UserSession.Token}")
             {
