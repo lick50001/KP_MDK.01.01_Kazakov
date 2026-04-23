@@ -56,9 +56,12 @@ namespace Kazakov_KP_01._01.Pages
         private async void ClickToMain(object sender, RoutedEventArgs e)
         {
             string login = tb_login.Text;
-            string pass = tb_password.Text;
+            string pass = pb_password.Password;
+            bool isAdmin = chkIsAdmin.IsChecked == true;
 
-            string result = await _api.RegisterAsync(login, pass);
+            string role = isAdmin ? "Admin" : "User";
+
+            string result = await _api.RegisterAsync(login, pass, role);
             if (result != "Success")
             {
                 string finalError = string.IsNullOrEmpty(result) ? "Ошибка регистрации" : result;
@@ -71,6 +74,51 @@ namespace Kazakov_KP_01._01.Pages
             mw.Top = this.Top;
             mw.Show();
             this.Close();
+        }
+
+        private void Pb_Password_GotFocus(object sender, RoutedEventArgs e)
+        {
+            UpdatePasswordPlaceholder(sender as PasswordBox, true);
+        }
+
+        private void Pb_Password_LostFocus(object sender, RoutedEventArgs e)
+        {
+            UpdatePasswordPlaceholder(sender as PasswordBox, false);
+        }
+
+        private void Pb_Password_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            var pb = sender as PasswordBox;
+            if (pb != null && !pb.IsFocused)
+            {
+                UpdatePasswordPlaceholder(pb, false);
+            }
+        }
+
+        private void UpdatePasswordPlaceholder(PasswordBox passwordBox, bool isFocused)
+        {
+            if (passwordBox == null) return;
+
+            var placeholder = passwordBox.Template.FindName("PlaceholderText", passwordBox) as System.Windows.Controls.TextBlock;
+
+            if (placeholder != null)
+            {
+                if (isFocused)
+                {
+                    placeholder.Visibility = System.Windows.Visibility.Collapsed;
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(passwordBox.Password))
+                    {
+                        placeholder.Visibility = System.Windows.Visibility.Visible;
+                    }
+                    else
+                    {
+                        placeholder.Visibility = System.Windows.Visibility.Collapsed;
+                    }
+                }
+            }
         }
     }
 }

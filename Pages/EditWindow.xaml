@@ -1,10 +1,10 @@
-﻿<Window x:Class="Kazakov_KP_01._01.MainWindow"
+﻿<Window x:Class="Kazakov_KP_01._01.Pages.EditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Kazakov_KP_01._01"
-        mc:Ignorable="d"
+        xmlns:local="clr-namespace:Kazakov_KP_01._01.Pages"
+                mc:Ignorable="d"
         Title="MainWindow" WindowStartupLocation="Manual" Height="575" Width="544" Background="Transparent" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize">
 
     <Window.Resources>
@@ -56,7 +56,7 @@
             <Button Click="MinimizeBtn_Click" Background="Transparent" BorderBrush="#33FFFFFF" BorderThickness="1" Width="30" Height="30" Content="–" Margin="359,21,153,522" Foreground="White" FontSize="36" Padding="0 -15 0 0"/>
 
             <Button Click="CloseBtn_Click" Background="Transparent" BorderBrush="#33FFFFFF" BorderThickness="1" Width="30" Height="30" Content="×" Margin="397,21,115,522" Foreground="White" FontSize="36" Padding="0 -15 0 0"/>
-
+            
             <Border CornerRadius="39"
                 Background="#1A1C24"
                 BorderBrush="#2D313A" 
@@ -74,7 +74,7 @@
                 </Border.Effect>
 
                 <Grid>
-                    <Label Content="Авторизация" FontFamily="Exo 2" FontSize="36" Foreground="#FFFFFF" FontWeight="Bold" Margin="53,24,38,351">
+                    <Label x:Name="Title" Content="Редактирование" FontFamily="Exo 2" FontSize="36" Foreground="#FFFFFF" FontWeight="Bold" Margin="18,24,16,351" HorizontalContentAlignment="Center">
                         <Label.Effect>
                             <DropShadowEffect
                             BlurRadius="15" 
@@ -90,7 +90,7 @@
                        IsHitTestVisible="False" 
                        VerticalAlignment="Top" Height="38" Margin="0,149,2,0"/>
 
-                    <TextBox x:Name="tb_login" Foreground="#FFFFFF" FontSize="18" BorderThickness="0" Background="Transparent" Style="{StaticResource PlaceHolderStyle}" Tag="Логин" Margin="53,143,53,261" Width="230" Height="25">
+                    <TextBox x:Name="tb_Name" Foreground="#FFFFFF" FontSize="18" BorderThickness="0" Background="Transparent" Style="{StaticResource PlaceHolderStyle}" Tag="Name" Margin="53,143,53,261" Width="230" Height="25">
                         <TextBox.Effect>
                             <DropShadowEffect
                                 BlurRadius="4" 
@@ -106,27 +106,16 @@
                            IsHitTestVisible="False" 
                            VerticalAlignment="Top" Height="45" Margin="11,222,12,0"/>
 
-                    <PasswordBox x:Name="pb_password" 
-                         Foreground="#FFFFFF" FontSize="18" BorderThickness="0" Background="Transparent" 
-                         Tag="Пароль" 
-                         Style="{StaticResource PlaceHolderPasswordStyle}"
-                         PasswordChar="*"
-                         Margin="53,220,54,184" Width="230" Height="25"
-                         PasswordChanged="Pb_Password_PasswordChanged"
-                         GotFocus="Pb_Password_GotFocus"
-                         LostFocus="Pb_Password_LostFocus">
-                        <PasswordBox.Effect>
-                            <DropShadowEffect BlurRadius="4" Color="#000000" Opacity="0.6" ShadowDepth="2" Direction="270"/>
-                        </PasswordBox.Effect>
-                    </PasswordBox>
-
-                    <CheckBox Style="{StaticResource RoundedCheckBox}" FontSize="12" FontFamily="Exo 2" Foreground="#6E7485" Background="Transparent" Content="Запомнить меня" HorizontalAlignment="Left" Margin="54,255,0,0" VerticalAlignment="Top"/>
-
-                    <Rectangle HorizontalAlignment="Left"  Height="8" Margin="177,259,0,0" Stroke="#FFFFFF" VerticalAlignment="Top" Width="1"/>
-
-                    <Button Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#6E7485" BorderThickness="0" Content="Забыли пароль?" HorizontalAlignment="Left" Margin="192,254,0,0" VerticalAlignment="Top"/>
-
-                    <Button Click="NewReg_Click" Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#FFFFFF" BorderThickness="0" Content="Зарегистрироваться" HorizontalAlignment="Center" Margin="0,327,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="tb_Price" Foreground="#FFFFFF" FontSize="18" BorderThickness="0" Background="Transparent" Style="{StaticResource PlaceHolderStyle}" Tag="MaxPrice" Margin="53,220,54,184" Width="230" Height="25">
+                        <TextBox.Effect>
+                            <DropShadowEffect
+                                BlurRadius="4" 
+                                Color="#000000" 
+                                Opacity="0.6" 
+                                ShadowDepth="2"
+                                Direction="270"/>
+                        </TextBox.Effect>
+                    </TextBox>
 
                     <Image Source="/Images/Upr_Btn.png"                           
                            Stretch="Uniform" 
@@ -138,31 +127,33 @@
                             IsHitTestVisible="False" 
                             VerticalAlignment="Top" Height="30" Margin="276,383,18,0"/>
 
-                    <Button Click="ClickToMain" Background="#E0F7FA" Width="255" Height="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,356,0,0" BorderThickness="0">
+                    <Button x:Name="btnAction" Click="ClickToSave" Background="#E0F7FA" Width="255" Height="40" HorizontalAlignment="Center" Foreground="#0B0C15" FontFamily="Exo 2" FontWeight="Bold" 
+                            FontSize="18"  VerticalAlignment="Top" Margin="0,356,0,0" BorderThickness="0" Content="Редактировать">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" 
                     CornerRadius="0,10,0,10">
-
-                                    <TextBlock Text="Авторизоваться" 
-                           Foreground="#0B0C15"
-                           FontFamily="Exo 2"
-                           FontWeight="Bold"
-                           FontSize="18" 
-                           HorizontalAlignment="Center" 
-                           VerticalAlignment="Center">
-                                        <TextBlock.LayoutTransform>
-                                            <ScaleTransform ScaleX="1.1" />
-                                        </TextBlock.LayoutTransform>
-                                    </TextBlock>
+                                    <!-- Используем ContentPresenter, чтобы отображать то, что написано в Content кнопки -->
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center"
+                                  RecognizesAccessKey="True"/>
                                 </Border>
+                                <!-- Добавим стиль для текста внутри, если нужно задать шрифт -->
+                                <ControlTemplate.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontFamily" Value="Exo 2"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="FontSize" Value="18"/>
+                                        <Setter Property="Foreground" Value="#0B0C15"/>
+                                    </Style>
+                                </ControlTemplate.Resources>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
                 </Grid>
             </Border>
-            <StackPanel/>
         </Grid>
 
     </Border>
 </Window>
+

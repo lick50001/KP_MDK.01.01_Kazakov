@@ -121,19 +121,28 @@
                            IsHitTestVisible="False"
                            VerticalAlignment="Top" Height="45" Margin="11,225,12,0"/>
 
-                    <TextBox x:Name="tb_login" Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Логин" Margin="53,143,53,0" Width="230" Height="25" VerticalAlignment="Top">
+                    <TextBox x:Name="tb_login" Foreground="#FFFFFF" FontSize="18" BorderThickness="0" Background="Transparent" Style="{StaticResource PlaceHolderStyle}" Tag="Логин" Margin="53,143,53,0" Width="230" Height="25" VerticalAlignment="Top">
                         <TextBox.Effect>
                             <DropShadowEffect BlurRadius="4" Color="#000000" Opacity="0.6" ShadowDepth="2" Direction="270"/>
                         </TextBox.Effect>
                     </TextBox>
 
-                    <TextBox x:Name="tb_password" Foreground="#6E7485" FontSize="18" BorderThickness="0" Background="Transparent" Text="Пароль" Margin="53,216,53,0" Width="230" Height="25" VerticalAlignment="Top">
-                        <TextBox.Effect>
+                    <PasswordBox x:Name="pb_password" 
+                         Foreground="#FFFFFF" FontSize="18" BorderThickness="0" Background="Transparent" 
+                         Tag="Пароль" 
+                         Style="{StaticResource PlaceHolderPasswordStyle}"
+                         PasswordChar="*"
+                         Margin="53,220,54,184" Width="230" Height="25"
+                         PasswordChanged="Pb_Password_PasswordChanged"
+                         GotFocus="Pb_Password_GotFocus"
+                         LostFocus="Pb_Password_LostFocus">
+                        <PasswordBox.Effect>
                             <DropShadowEffect BlurRadius="4" Color="#000000" Opacity="0.6" ShadowDepth="2" Direction="270"/>
-                        </TextBox.Effect>
-                    </TextBox>
+                        </PasswordBox.Effect>
+                    </PasswordBox>
                 </Grid>
             </Border>
+            <CheckBox x:Name="chkIsAdmin" Style="{StaticResource RoundedCheckBox}" FontSize="12" FontFamily="Exo 2" Foreground="White" Background="Transparent" Content="Админ?" HorizontalAlignment="Center" Margin="0,344,0,0" VerticalAlignment="Top"/>
         </Grid>
     </Border>
 </Window>

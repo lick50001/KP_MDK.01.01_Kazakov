@@ -16,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace Kazakov_KP_01._01.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для DashboardPage.xaml    
-    /// </summary>
     public partial class DashboardPage : Page
     {
         public DashboardPage()

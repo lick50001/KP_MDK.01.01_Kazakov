@@ -59,12 +59,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IntToVisibilityConverter.cs" />
     <Compile Include="Classes\UserSession.cs" />
     <Compile Include="Elements\Item.xaml.cs">
       <DependentUpon>Item.xaml</DependentUpon>
     </Compile>
     <Compile Include="Elements\Log.xaml.cs">
       <DependentUpon>Log.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EditWindow.xaml.cs">
+      <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Сhecklist.xaml.cs">
       <DependentUpon>Сhecklist.xaml</DependentUpon>
@@ -91,6 +95,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Pages\DashboardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

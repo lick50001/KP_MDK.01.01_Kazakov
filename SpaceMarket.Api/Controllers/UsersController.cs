@@ -20,7 +20,7 @@ namespace SpaceMarket.Api.Controllers
         public UsersController(SpaceMarketContext context) {_context = context;}
 
         [HttpPost("Register")]
-        public async Task<ActionResult<Users>> Register([FromForm] string Usname, [FromForm] string Password)
+        public async Task<ActionResult<Users>> Register([FromForm] string Usname, [FromForm] string Password, [FromForm] string Level)
         {
             if (await _context.Users.AnyAsync(u => u.UserName == Usname))
                 return BadRequest("Ошибка: Такой юзер уже есть в базе!");
@@ -30,7 +30,8 @@ namespace SpaceMarket.Api.Controllers
             var newUs = new Users
             {
                 UserName = Usname,
-                PwdHash = PasswordHash
+                PwdHash = PasswordHash,
+                LevelRoot = Level
             };
 
             _context.Users.Add(newUs);

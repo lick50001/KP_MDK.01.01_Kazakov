@@ -38,6 +38,24 @@ namespace SpaceMarket.Api.Controllers
             return Ok(items);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Items>> GetItemById([FromRoute] int id, [FromQuery] string token)
+        {
+            var userIdStr = VerifyToken(token);
+            if (string.IsNullOrEmpty(userIdStr))
+                return Unauthorized("Невалидный токен");
+
+            int usId = int.Parse(userIdStr);
+
+            var item = await _context.Items
+                .FirstOrDefaultAsync(i => i.Item_Id == id && i.UserId == usId);
+
+            if (item == null)
+                return NotFound("Предмет не найден или у вас нет прав на его просмотр");
+
+            return Ok(item);
+        }
+
         [HttpPost("Add")]
         public async Task<ActionResult> AddMyItem([FromQuery] string token, [FromForm] string itemname, [FromForm] int maxBuyprice, [FromForm] bool isactive)
         {

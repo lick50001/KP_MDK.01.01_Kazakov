@@ -33,11 +33,12 @@ namespace Kazakov_KP_01._01.Services
             }
             return null;
         }
-        public async Task<string> RegisterAsync(string username, string password)
+        public async Task<string> RegisterAsync(string username, string password, string level)
         {
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(username), "Usname");
             content.Add(new StringContent(password), "Password");
+            content.Add(new StringContent(level), "Level");
 
             var response = await _client.PostAsync("Users/Register", content);
             if (response.IsSuccessStatusCode)
@@ -93,6 +94,20 @@ namespace Kazakov_KP_01._01.Services
 
             return new List<Items>();
         }
+
+        public async Task<Items> GetItemByIdAsync(int id)
+        {
+            var response = await _client.GetAsync($"Items/{id}?token={UserSession.Token}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Items>(json);
+            }
+
+            return null;
+        }
+
         public async Task<string> AddItemAsync(string itemname, int maxBuyprice, bool isactive)
         {
             var content = new MultipartFormDataContent();
@@ -118,7 +133,12 @@ namespace Kazakov_KP_01._01.Services
             content.Add(new StringContent(maxBuyprice.ToString()), "maxBuyprice");
             content.Add(new StringContent(isactive.ToString().ToLower()), "isactive");
 
-            var response = await _client.PostAsync($"Items/Edit?token={UserSession.Token}", content);
+            var request = new HttpRequestMessage(HttpMethod.Put, $"Items/Edit?token={UserSession.Token}")
+            {
+                Content = content
+            };
+
+            var response = await _client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
                 return "Success";
