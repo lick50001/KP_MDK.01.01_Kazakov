@@ -120,11 +120,11 @@
                         </PasswordBox.Effect>
                     </PasswordBox>
 
-                    <CheckBox Style="{StaticResource RoundedCheckBox}" FontSize="12" FontFamily="Exo 2" Foreground="#6E7485" Background="Transparent" Content="Запомнить меня" HorizontalAlignment="Left" Margin="54,255,0,0" VerticalAlignment="Top"/>
+                    <!--<CheckBox Style="{StaticResource RoundedCheckBox}" FontSize="12" FontFamily="Exo 2" Foreground="#6E7485" Background="Transparent" Content="Запомнить меня" HorizontalAlignment="Left" Margin="54,255,0,0" VerticalAlignment="Top"/>
 
                     <Rectangle HorizontalAlignment="Left"  Height="8" Margin="177,259,0,0" Stroke="#FFFFFF" VerticalAlignment="Top" Width="1"/>
 
-                    <Button Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#6E7485" BorderThickness="0" Content="Забыли пароль?" HorizontalAlignment="Left" Margin="192,254,0,0" VerticalAlignment="Top"/>
+                    <Button Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#6E7485" BorderThickness="0" Content="Забыли пароль?" HorizontalAlignment="Left" Margin="192,254,0,0" VerticalAlignment="Top"/>-->
 
                     <Button Click="NewReg_Click" Background="Transparent" FontSize="12" FontFamily="Exo 2" Foreground="#FFFFFF" BorderThickness="0" Content="Зарегистрироваться" HorizontalAlignment="Center" Margin="0,327,0,0" VerticalAlignment="Top"/>
 

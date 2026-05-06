@@ -36,16 +36,20 @@ namespace Kazakov_KP_01._01.Services
 
         public async Task<Users> GetCurrentUserAsync()
         {
-            var response = await _client.GetAsync($"Users/GetCurrent?token={SessionManager.Token}");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var json = await response.Content.ReadAsStringAsync();
-                var user = JsonConvert.DeserializeObject<Users>(json);
-                return user;
-            }
+                var response = await _client.GetAsync($"Users/GetCurrent?token={SessionManager.Token}");
 
-            return null;
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var user = JsonConvert.DeserializeObject<Users>(json);
+                    return user;
+                }
+
+                return null;
+            }
+            catch{ return null; }          
         }
 
         public async Task<string> RegisterAsync(string username, string password, string level)
@@ -99,15 +103,19 @@ namespace Kazakov_KP_01._01.Services
         // ПРЕДММЕТЫ
         public async Task<List<Items>> GetItemAsync()
         {
-            var response = await _client.GetAsync($"Items/Get?token={SessionManager.Token}");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<Items>>(json);
-            }
+                var response = await _client.GetAsync($"Items/Get?token={SessionManager.Token}");
 
-            return new List<Items>();
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<Items>>(json);
+                }
+
+                return new List<Items>();
+            }
+            catch{ return new List<Items>(); }
         }
 
         public async Task<Items> GetItemByIdAsync(int id)

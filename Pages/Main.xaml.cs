@@ -30,7 +30,7 @@ namespace Kazakov_KP_01._01.Pages
             if (_currentUser != null)
                 tb_Role.Text = $"{_currentUser.LevelRoot}: {_currentUser.UserName}";
             else
-                tb_Role.Text = "Не авторизирован";
+                tb_Role.Text = "Не авторизован";
         }
 
         private void Nav_Home(object sender, MouseButtonEventArgs e)
