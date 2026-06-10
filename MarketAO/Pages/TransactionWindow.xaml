@@ -1,0 +1,159 @@
+﻿<Window x:Class="MarketAO.Pages.TransactionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Сделка" Height="450" Width="850"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+
+    <Window.Resources>
+        <!-- Стиль для удаления подсветки и отступов ListViewItem -->
+        <Style x:Key="MarketListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,1"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <ContentPresenter />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="#2D2924" CornerRadius="12" BorderBrush="#4D3326" BorderThickness="2">
+        <Grid Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="320"/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ЛЕВАЯ ПАНЕЛЬ -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock x:Name="TitleText" Text="Параметры сделки" Foreground="#C59D76" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                <Border Grid.Row="1" Background="#25201C" CornerRadius="8" Padding="20" BorderBrush="#4D3326" BorderThickness="1" VerticalAlignment="Top">
+                    <StackPanel>
+                        <TextBlock x:Name="ItemNameText" Text="Item Name" Foreground="#E8D8B5" FontSize="16" FontWeight="Bold" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="ItemTierText" Text="Tier 4" Foreground="#C0A060" Margin="0,5,0,15"/>
+
+                        <Rectangle Fill="#4D3326" Height="1" Margin="0,0,0,15"/>
+
+                        <Grid Margin="0,5">
+                            <TextBlock Text="Цена за единицу:" Foreground="#907060" VerticalAlignment="Center"/>
+                            <TextBox x:Name="PriceBox" Text="0" Foreground="#FFD060" Background="#1A1511" BorderBrush="#4D3326" 
+                                     HorizontalAlignment="Right" FontWeight="Bold" Width="100" TextAlignment="Right" 
+                                     VerticalContentAlignment="Center" Padding="5,2" TextChanged="Price_Changed"/>
+                        </Grid>
+
+                        <Grid Margin="0,15">
+                            <TextBlock Text="Количество:" Foreground="#907060" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="−" Click="Minus_Click" Width="32" Height="32" Background="#3D2E22" Foreground="White" BorderBrush="#4D3326"/>
+                                <TextBox x:Name="QuantityBox" Width="60" Margin="8,0" TextAlignment="Center" VerticalContentAlignment="Center" Background="#1A1511" Foreground="White" BorderBrush="#4D3326" TextChanged="Quantity_Changed" FontSize="14"/>
+                                <Button Content="+" Click="Plus_Click" Width="32" Height="32" Background="#3D2E22" Foreground="White" BorderBrush="#4D3326"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Rectangle Fill="#4D3326" Height="1" Margin="0,10"/>
+
+                        <!-- Поле для вывода налога -->
+                        <Grid x:Name="TaxGrid" Margin="0,0,0,10">
+                            <TextBlock Text="Налог (10%):" Foreground="#907060" FontSize="14" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TaxText" Text="0" Foreground="#FF6B6B" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <TextBlock x:Name="TotalLabel" Text="ИТОГО:" Foreground="#E8D8B5" FontSize="18" FontWeight="Bold"/>
+                            <TextBlock x:Name="TotalText" Text="0" Foreground="#FFD060" HorizontalAlignment="Right" FontSize="22" FontWeight="Bold"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <UniformGrid Grid.Row="2" Columns="2" Margin="0,20,0,0">
+                    <Button Content="Отмена" Click="Cancel_Click" Height="40" Margin="0,0,5,0" Background="#3D2E22" Foreground="#C59D76" BorderThickness="1" BorderBrush="#4D3326"/>
+                    <Button x:Name="ConfirmButton" Content="Подтвердить" Click="Confirm_Click" Height="40" Margin="5,0,0,0" Background="#456321" Foreground="White" BorderThickness="0" FontWeight="Bold"/>
+                </UniformGrid>
+            </Grid>
+
+            <!-- ПРАВАЯ ПАНЕЛЬ -->
+            <Border Grid.Column="2" Background="#1A1511" CornerRadius="8" BorderBrush="#4D3326" BorderThickness="1" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <UniformGrid Columns="2" Margin="0,0,0,15">
+                        <TextBlock Text="Заказ на продажу" Foreground="#4ECDC4" FontWeight="Bold" HorizontalAlignment="Center" FontSize="12"/>
+                        <TextBlock Text="Заказ на покупку" Foreground="#FF6B6B" FontWeight="Bold" HorizontalAlignment="Center" FontSize="12"/>
+                    </UniformGrid>
+
+                    <Grid Grid.Row="1" Margin="5,0,5,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="25"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Цена" Foreground="#505050" FontSize="10" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="1" Text="Кол-во" Foreground="#505050" FontSize="10" FontWeight="Bold" HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Column="3" Text="Цена" Foreground="#505050" FontSize="10" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="4" Text="Кол-во" Foreground="#505050" FontSize="10" FontWeight="Bold" HorizontalAlignment="Right"/>
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="25"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- BUY LIST (Левая колонка списка - Продавцы) -->
+                        <ListView x:Name="BuyOrdersList" Grid.Column="0" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MarketListViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Height="22">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding PriceDisplay}" Foreground="#4ECDC4" VerticalAlignment="Center" FontSize="12"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Amount}" Foreground="#907060" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <Rectangle Grid.Column="1" Fill="#25201C" Width="1" Margin="12,0"/>
+
+                        <!-- SELL LIST (Правая колонка списка - Скупщики) -->
+                        <ListView x:Name="SellOrdersList" Grid.Column="2" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MarketListViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Height="22">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="70"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding PriceDisplay}" Foreground="#FF6B6B" VerticalAlignment="Center" FontSize="12"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Amount}" Foreground="#907060" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="12"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

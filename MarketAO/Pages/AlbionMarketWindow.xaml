@@ -1,0 +1,104 @@
+﻿<Window x:Class="MarketAO.Pages.AlbionMarketWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:services="clr-namespace:MarketAO.Services" 
+        Title="MarketAO" Height="750" Width="950"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent" 
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style x:Key="TabButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="55"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Background" Value="#3D3D3D"/>
+            <Setter Property="BorderBrush" Value="#1A1511"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="0,2,2,2" 
+                                CornerRadius="0,8,8,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#444"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#4D3326"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="850"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#2D2924" CornerRadius="10" BorderBrush="#1A1511" BorderThickness="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="20,0" Background="Transparent" MouseDown="Header_MouseDown">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="↩" 
+                                Click="BackToMap_Click" 
+                                Foreground="#E8D8B5" 
+                                Background="#3D3D3D" 
+                                Width="40" Height="40" 
+                                FontSize="20" 
+                                Cursor="Hand"
+                                ToolTip="Вернуться к карте мира">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="20"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <TextBlock x:Name="CityTitle" 
+                                   Text="Рынок" 
+                                   Foreground="#E8D8B5" 
+                                   FontSize="24" 
+                                   Margin="15,0" 
+                                   VerticalAlignment="Center" 
+                                   FontWeight="Bold"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <!-- Исправленная привязка баланса -->
+                        <TextBlock Text="{Binding Source={x:Static services:BalanceService.Instance}, Path=CurrentBalance, StringFormat={}{0:N0}}" 
+                                   Foreground="#FFCC00" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <TextBlock Text=" Silver" Foreground="#FFCC00" FontSize="14" VerticalAlignment="Bottom" Margin="4,0,0,2"/>
+
+                        <!-- Кнопка закрытия без сокращений -->
+                        <Button Content="✕" Click="Close_Click" Foreground="White" Background="Transparent" BorderThickness="0" Margin="20,0,0,0" FontSize="22" Cursor="Hand"/>
+                    </StackPanel>
+                </Grid>
+
+                <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden" Margin="5"/>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Column="1" Margin="-3,120,0,0">
+            <Button Style="{StaticResource TabButtonStyle}" Click="NavBuy_Click" Tag="Buy">
+                <Image Source="/Images/ic-buy.png" Width="30" Height="30"/>
+            </Button>
+            <Button Style="{StaticResource TabButtonStyle}" Click="NavSell_Click" Tag="Sell">
+                <Image Source="/Images/ic-sale.png" Width="30" Height="30"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

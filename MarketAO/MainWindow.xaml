@@ -1,0 +1,90 @@
+﻿<Window x:Class="MarketAO.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Albion Global Map" Height="550" Width="1000" 
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#050508"
+        WindowStyle="None" AllowsTransparency="True">
+
+    <Window.Resources>
+        <Style x:Key="CityOrb" TargetType="Border">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="CornerRadius" Value="50"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.7" 
+                                     Color="{Binding BorderBrush.Color, RelativeSource={RelativeSource Self}}"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#33FFFFFF"/>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="ExtraBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Image Source="/Images/Background.jfif" Stretch="UniformToFill" Opacity="0.6"/>
+        <Rectangle Opacity="0.8">
+            <Rectangle.Fill>
+                <RadialGradientBrush Center="0.5,0.5" RadiusX="0.7" RadiusY="0.7">
+                    <GradientStop Color="Transparent" Offset="0.3"/>
+                    <GradientStop Color="#050508" Offset="1"/>
+                </RadialGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Canvas Margin="80 50 0 0">
+            <Border Style="{StaticResource CityOrb}" BorderBrush="#00D2FF" Canvas.Left="156" Canvas.Top="216"
+                    Tag="Martlock" MouseDown="City_Click">
+                <TextBlock Text="MARTLOCK"/>
+            </Border>
+
+            <Border Style="{StaticResource CityOrb}" BorderBrush="#A033FF" Canvas.Left="223" Canvas.Top="41"
+                    Tag="Thetford" MouseDown="City_Click">
+                <TextBlock Text="THETFORD"/>
+            </Border>
+
+            <Border Style="{StaticResource CityOrb}" BorderBrush="#FFFFFF" Canvas.Left="529" Canvas.Top="41"
+                    Tag="F. Sterling" MouseDown="City_Click">
+                <TextBlock Text="F. STERLING"/>
+            </Border>
+
+            <Border Style="{StaticResource CityOrb}" BorderBrush="#00FF66" Canvas.Left="558" Canvas.Top="201"
+                    Tag="Lymhurst" MouseDown="City_Click">
+                <TextBlock Text="LYMHURST"/>
+            </Border>
+
+            <Border Style="{StaticResource CityOrb}" BorderBrush="#FFCC00" Canvas.Left="367" Canvas.Top="289"
+                    Tag="Bridgewatch" MouseDown="City_Click">
+                <TextBlock Text="BRIDGEWATCH"/>
+            </Border>
+
+            <Border Style="{StaticResource CityOrb}" BorderBrush="#FF3333" Canvas.Left="367" Canvas.Top="151"
+                    Tag="Caerleon" MouseDown="City_Click">
+                <TextBlock Text="CAERLEON"/>
+            </Border>
+        </Canvas>
+
+        <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Margin="15" Background="Transparent" Foreground="Gray" 
+                BorderThickness="0" FontSize="20" Click="Close_Click" Cursor="Hand"/>
+    </Grid>
+</Window>
