@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Kazakov_KP_01._01.Classes
 {
-    public static class UserSession
+    public static class SessionManager
     {
         public static string Token { get; set; }
-
         public static string UserName { get; set; }
+        public static string CurrentRole { get; set; }
     }
 }

@@ -14,37 +14,35 @@
         </Grid.RowDefinitions>
 
         <!-- Карточки -->
-        <UniformGrid Grid.Row="0" Columns="4" Margin="0,0,0,20">
+        <UniformGrid Grid.Row="0" Columns="3" Margin="0,0,0,20">
 
             <Border Margin="0,0,10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
                 <StackPanel Margin="30">
                     <TextBlock Text="ВРЕМЯ РАБОТЫ" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                    <TextBlock Text="42ч 15м" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
+                    <TextBlock x:Name="lTimeWork" Text="00:00:00" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
                     <TextBlock Text="Без перезагрузок" FontSize="18" FontWeight="SemiBold" Foreground="#00FFC2" FontFamily="Exo 2"/>
                 </StackPanel>
             </Border>
 
-            <Border Margin="10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
+            <!--<Border Margin="10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
                 <StackPanel Margin="30">
                     <TextBlock Text="ПОДПИСКА" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                    <TextBlock Text="12 ДНЕЙ" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#00FFC2" FontFamily="Exo 2"/>
-                    <TextBlock Text="Тариф: Ultra" FontSize="18" FontWeight="SemiBold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
+                    <TextBlock Text="12 ДНЕЙ" FontSize="56" Margin="0 30 0 15" FontWeight="Bold" Foreground="#00FFC2" FontFamily="Exo 2"/>
                 </StackPanel>
-            </Border>
+            </Border>-->
 
             <Border Margin="10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
                 <StackPanel Margin="30">
                     <TextBlock Text="ПРИБЫЛЬ (24ч)" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                    <TextBlock Text="$151,521" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
-                    <TextBlock Text="+15% к вчера" FontSize="18" FontWeight="SemiBold" Foreground="#00FFC2" FontFamily="Exo 2"/>
+                    <TextBlock Text="$151,521" FontSize="56" Margin="0 30 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
+
                 </StackPanel>
             </Border>
 
             <Border Margin="10,0,0,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
                 <StackPanel Margin="30">
                     <TextBlock Text="ПРИБЫЛЬ (Сеанс)" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                    <TextBlock Text="$38,151" FontSize="36" Margin="0 20 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
-                    <TextBlock Text="-45% от сеанса" FontSize="18" FontWeight="SemiBold" Foreground="#FF4D4D" FontFamily="Exo 2"/>
+                    <TextBlock Text="$38,151" FontSize="56" Margin="0 30 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
                 </StackPanel>
             </Border>
 

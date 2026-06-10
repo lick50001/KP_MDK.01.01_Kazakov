@@ -50,7 +50,11 @@ namespace Kazakov_KP_01._01.Pages
 
                 itmRow.OnEditRequested += (id) =>
                 {
-                    MessageBox.Show($"Редактируем предмет с ID: {id}");
+                    EditWindow ew = new EditWindow(id);
+
+                    bool? result = ew.ShowDialog();
+                    if (result == true)
+                        LoadItem();
                 };
 
                 ItemsContainer.Children.Add(itmRow); 
@@ -59,7 +63,10 @@ namespace Kazakov_KP_01._01.Pages
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            
+            EditWindow ew = new EditWindow();
+            bool? result = ew.ShowDialog();
+            if (result == true)
+                LoadItem();
         }
     }
 }
