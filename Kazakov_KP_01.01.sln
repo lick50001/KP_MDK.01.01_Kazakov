@@ -5,9 +5,9 @@ VisualStudioVersion = 17.14.36717.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kazakov_KP_01.01", "Kazakov_KP_01.01.csproj", "{7D19065B-C326-42FC-9C59-F6806B8DD68D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceMarket.Api", "SpaceMarket.Api\SpaceMarket.Api.csproj", "{62CADEE9-C014-4989-8824-B22B2C13A470}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceMarket.Api", "SpaceMarket.Api\SpaceMarket.Api.csproj", "{62CADEE9-C014-4989-8824-B22B2C13A470}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketAO", "..\..\MarketAO\MarketAO.csproj", "{46AA7075-A777-456E-BF1C-9071904E2CC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketAO", "MarketAO\MarketAO.csproj", "{46AA7075-A777-456E-BF1C-9071904E2CC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
