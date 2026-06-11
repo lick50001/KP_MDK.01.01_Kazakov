@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Kazakov_KP_01._01.Services;
 
 namespace Kazakov_KP_01._01.Pages
 {
@@ -23,6 +24,34 @@ namespace Kazakov_KP_01._01.Pages
         public FinancePage()
         {
             InitializeComponent();
+        }
+
+        private async void FinancePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadFinanceLogs();
+        }
+
+        public async Task LoadFinanceLogs()
+        {
+            ApiService _api = new ApiService();
+            var fins = await _api.GetFinanceLogAsync();
+            FinanceLogsContainer.Children.Clear();
+
+            foreach (var fin in fins)
+            {
+                var finRow = new Kazakov_KP_01._01.Elements.FinanceLog();
+
+                if (finRow != null)
+                {
+                    finRow.SetData(
+                        fin.EventTime.ToString("HH:mm"),
+                        fin.Message,
+                        fin.FinanceType
+                    );
+
+                    FinanceLogsContainer.Children.Add(finRow);
+                }
+            }
         }
     }
 }

@@ -60,6 +60,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\SessionManager.cs" />
+    <Compile Include="Elements\FinanceLog.xaml.cs">
+      <DependentUpon>FinanceLog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IntToVisibilityConverter.cs" />
     <Compile Include="Elements\Item.xaml.cs">
       <DependentUpon>Item.xaml</DependentUpon>
@@ -67,6 +70,7 @@
     <Compile Include="Elements\Log.xaml.cs">
       <DependentUpon>Log.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Finance.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Pages\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
@@ -75,6 +79,10 @@
       <DependentUpon>Сhecklist.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ApiService.cs" />
+    <Page Include="Elements\FinanceLog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Elements\Item.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

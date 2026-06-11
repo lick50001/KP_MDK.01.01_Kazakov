@@ -21,6 +21,7 @@ namespace SpaceMarket.Api.Context
         public DbSet<Users> Users { get; set; }
         public DbSet<Items> Items { get; set; }
         public DbSet<Logs> Logs { get; set; }
+        public DbSet<Finance> Finance { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,11 @@ namespace SpaceMarket.Api.Context
                 .HasOne(l => l.User)
                 .WithMany(u => u.Logs)
                 .HasForeignKey(l => l.UserId);
+
+            modelBuilder.Entity<Finance>()
+                .HasOne(l => l.User)
+                .WithMany(u => u.Finances)
+                .HasForeignKey(f => f.UserId);
         }
     }
 }

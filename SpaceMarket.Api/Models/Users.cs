@@ -11,6 +11,7 @@ namespace SpaceMarket.Api.Models
         public string LevelRoot { get; set; }
         public List<Items> Items { get; set; } = new();
         public List<Logs> Logs { get; set; } = new();
+        public List<Finance> Finances { get; set; } = new();
 
         public Users() { }
 

@@ -92,7 +92,39 @@ namespace Kazakov_KP_01._01.Services
             var response = await _client.PostAsync($"Log/Add?token={SessionManager.Token}", content);
 
             if (response.IsSuccessStatusCode)
-                return "Success"; 
+                return "Success";
+            else
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                return string.IsNullOrEmpty(errorBody) ? $"Ошибка: {response.StatusCode}" : errorBody;
+            }
+        }
+
+        // ФИНАНСЫ
+
+        public async Task<List<Finance>> GetFinanceLogAsync()
+        {
+            var response = await _client.GetAsync($"Finance/Get?token={SessionManager.Token}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<Finance>>(json);
+            }
+
+            return new List<Finance>();
+        }
+        public async Task<string> AddFinanceLogAsync(string fintype, string message)
+        {
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(fintype), "fintype");
+            content.Add(new StringContent(message), "message");
+            content.Add(new StringContent(DateTime.Now.ToString("o")), "eventTime");
+
+            var response = await _client.PostAsync($"Finance/Add?token={SessionManager.Token}", content);
+
+            if (response.IsSuccessStatusCode)
+                return "Success";
             else
             {
                 var errorBody = await response.Content.ReadAsStringAsync();
