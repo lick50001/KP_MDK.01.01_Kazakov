@@ -24,12 +24,16 @@ namespace Kazakov_KP_01._01.Services
             content.Add(new StringContent(username), "Usname");
             content.Add(new StringContent(password), "Password");
 
-
             var response = await _client.PostAsync("Users/Login", content);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var data = JsonConvert.DeserializeAnonymousType(json, new { token = "" });
+                var data = JsonConvert.DeserializeAnonymousType(json, new { token = "", userId = 0, userName = "", levelRoot = "" });
+
+                SessionManager.Token = data.token;
+                SessionManager.UserName = data.userName;
+                SessionManager.CurrentRole = data.levelRoot; // <-- вот это главное
+
                 return data.token;
             }
             return null;

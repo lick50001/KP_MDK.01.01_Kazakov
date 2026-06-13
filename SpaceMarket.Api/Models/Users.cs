@@ -9,6 +9,7 @@ namespace SpaceMarket.Api.Models
         public string UserName { get; set; }
         public string PwdHash { get; set; }
         public string LevelRoot { get; set; }
+        public bool IsBanned { get; set; } = false;
         public List<Items> Items { get; set; } = new();
         public List<Logs> Logs { get; set; } = new();
         public List<Finance> Finances { get; set; } = new();

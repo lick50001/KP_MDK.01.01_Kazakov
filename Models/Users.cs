@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kazakov_KP_01._01.Models
+﻿namespace Kazakov_KP_01._01.Models
 {
     public class Users
     {
@@ -13,6 +7,6 @@ namespace Kazakov_KP_01._01.Models
         public string PwdHash { get; set; }
         public string LevelRoot { get; set; }
         public bool IsBanned { get; set; }
-        public string Level { get; set; }
+        public string Level => LevelRoot;
     }
 }

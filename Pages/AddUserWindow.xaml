@@ -6,6 +6,116 @@
         AllowsTransparency="True" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
 
+    <Window.Resources>
+        <Style x:Key="DarkComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="#252833"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="Exo 2"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="8,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                Background="#252833"
+                                BorderThickness="0"
+                                Focusable="False"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="#252833" CornerRadius="0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="30"/>
+                                                </Grid.ColumnDefinitions>
+                                                <ContentPresenter Grid.Column="0"
+                                                    Margin="12,10,0,10"
+                                                    VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="▾"
+                                                    Foreground="#6E7485"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"
+                                                    FontSize="12"/>
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+
+                            <ContentPresenter x:Name="ContentSite"
+                                IsHitTestVisible="False"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                Margin="12,0,30,0"
+                                VerticalAlignment="Center">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontFamily" Value="Exo 2"/>
+                                        <Setter Property="FontSize" Value="15"/>
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+
+                            <Popup x:Name="Popup"
+                                Placement="Bottom"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                PopupAnimation="Slide">
+                                <Border Background="#252833"
+                                    BorderBrush="#33FFFFFF"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    MinWidth="{TemplateBinding ActualWidth}">
+                                    <ScrollViewer SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DarkComboBoxItem" TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Exo 2"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="ItemBorder"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="6"
+                            Margin="4,2">
+                            <TextBlock Text="{TemplateBinding Content}"
+                                Foreground="{TemplateBinding Foreground}"
+                                FontFamily="Exo 2" FontSize="15"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#1A00FFC2"/>
+                                <Setter Property="Foreground" Value="#00FFC2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Border CornerRadius="20" Background="#1A1C24"
             BorderBrush="#2D313A" BorderThickness="1"
             MouseDown="Window_MouseDown">
@@ -20,7 +130,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Заголовок -->
             <Grid Grid.Row="0" Margin="0,0,0,30">
                 <TextBlock Text="Новый пользователь" Foreground="White"
                            FontSize="24" FontWeight="Bold" FontFamily="Exo 2"/>
@@ -29,7 +138,6 @@
                         BorderThickness="0" HorizontalAlignment="Right" Cursor="Hand"/>
             </Grid>
 
-            <!-- Поля -->
             <StackPanel Grid.Row="1" VerticalAlignment="Center">
                 <TextBlock Text="Имя пользователя" Foreground="#6E7485"
                            FontSize="13" FontFamily="Exo 2" Margin="0,0,0,6"/>
@@ -53,16 +161,14 @@
                            FontSize="13" FontFamily="Exo 2" Margin="0,0,0,6"/>
                 <Border Background="#252833" CornerRadius="10"
                         BorderBrush="#33FFFFFF" BorderThickness="1">
-                    <ComboBox x:Name="cb_Role" Background="Transparent" BorderThickness="0"
-                              Foreground="White" FontSize="15" FontFamily="Exo 2"
-                              Padding="8,10" SelectedIndex="0">
-                        <ComboBoxItem>User</ComboBoxItem>
-                        <ComboBoxItem>Moderator</ComboBoxItem>
+                    <ComboBox x:Name="cb_Role" Style="{StaticResource DarkComboBox}" SelectedIndex="0">
+                        <ComboBoxItem Style="{StaticResource DarkComboBoxItem}">User</ComboBoxItem>
+                        <ComboBoxItem Style="{StaticResource DarkComboBoxItem}">Moderator</ComboBoxItem>
+                        <ComboBoxItem Style="{StaticResource DarkComboBoxItem}">Admin</ComboBoxItem>
                     </ComboBox>
                 </Border>
             </StackPanel>
 
-            <!-- Кнопка -->
             <Button Grid.Row="2" Content="Создать" Click="CreateBtn_Click"
                     Background="#00FFC2" Foreground="#0B0C15"
                     FontSize="16" FontWeight="Bold" FontFamily="Exo 2"

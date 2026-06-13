@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using SpaceMarket.Api.Classes;
 using SpaceMarket.Api.Context;
 using SpaceMarket.Api.Models;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace SpaceMarket.Api.Controllers
 {
@@ -17,7 +12,7 @@ namespace SpaceMarket.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly SpaceMarketContext _context;
-        public UsersController(SpaceMarketContext context) {_context = context;}
+        public UsersController(SpaceMarketContext context) { _context = context; }
 
         [HttpPost("Register")]
         public async Task<ActionResult<Users>> Register([FromForm] string Usname, [FromForm] string Password, [FromForm] string Level)
@@ -31,12 +26,13 @@ namespace SpaceMarket.Api.Controllers
             {
                 UserName = Usname,
                 PwdHash = PasswordHash,
-                LevelRoot = Level
+                LevelRoot = Level,
+                IsBanned = false
             };
 
             _context.Users.Add(newUs);
             await _context.SaveChangesAsync();
-            return Ok(new {message = "Успешно!"});
+            return Ok(new { message = "Успешно!" });
         }
 
         [HttpPost("Login")]
@@ -50,6 +46,9 @@ namespace SpaceMarket.Api.Controllers
             bool Verify = BCrypt.Net.BCrypt.Verify(Password, user.PwdHash);
             if (!Verify)
                 return Unauthorized("Ошибка: Неверный логин или пароль!");
+
+            if (user.IsBanned)
+                return Unauthorized("Ошибка: Ваш аккаунт заблокирован!");
 
             string token = JwtToken.Generate(user);
             return Ok(new
@@ -77,9 +76,77 @@ namespace SpaceMarket.Api.Controllers
                 return NotFound("Пользователь не найден");
 
             user.PwdHash = null;
-
             return Ok(user);
         }
-       
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll([FromQuery] string token)
+        {
+            var principal = JwtToken.ValidateToken(token);
+            if (principal == null) return Unauthorized("Неверный токен");
+
+            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdClaim?.Value, out int currentUserId)) return BadRequest();
+
+            var currentUser = await _context.Users.FindAsync(currentUserId);
+            if (currentUser == null || currentUser.LevelRoot?.ToLower() != "admin")
+                return Forbid();
+
+            var users = await _context.Users
+                .Where(u => u.UserId != currentUserId)
+                .Select(u => new {
+                    u.UserId,
+                    u.UserName,
+                    u.LevelRoot,
+                    u.IsBanned
+                })
+                .ToListAsync();
+
+            return Ok(users);
+        }
+
+        [HttpPut("SetBan")]
+        public async Task<IActionResult> SetBan([FromQuery] string token, [FromForm] int userId, [FromForm] bool isBanned)
+        {
+            var principal = JwtToken.ValidateToken(token);
+            if (principal == null) return Unauthorized("Неверный токен");
+
+            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdClaim?.Value, out int currentUserId)) return BadRequest();
+
+            var currentUser = await _context.Users.FindAsync(currentUserId);
+            if (currentUser == null || currentUser.LevelRoot?.ToLower() != "admin")
+                return Forbid();
+
+            var target = await _context.Users.FindAsync(userId);
+            if (target == null) return NotFound("Пользователь не найден");
+            if (target.LevelRoot?.ToLower() == "admin") return BadRequest("Нельзя банить администратора");
+
+            target.IsBanned = isBanned;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteUser([FromQuery] string token, [FromForm] int userId)
+        {
+            var principal = JwtToken.ValidateToken(token);
+            if (principal == null) return Unauthorized("Неверный токен");
+
+            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdClaim?.Value, out int currentUserId)) return BadRequest();
+
+            var currentUser = await _context.Users.FindAsync(currentUserId);
+            if (currentUser == null || currentUser.LevelRoot?.ToLower() != "admin")
+                return Forbid();
+
+            var target = await _context.Users.FindAsync(userId);
+            if (target == null) return NotFound("Пользователь не найден");
+            if (target.LevelRoot?.ToLower() == "admin") return BadRequest("Нельзя удалить администратора");
+
+            _context.Users.Remove(target);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

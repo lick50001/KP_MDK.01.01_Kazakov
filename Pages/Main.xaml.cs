@@ -33,7 +33,6 @@ namespace Kazakov_KP_01._01.Pages
                 tb_Role.Text = $"{_currentUser.LevelRoot}: {_currentUser.UserName}";
 
                 string role = SessionManager.CurrentRole ?? _currentUser.LevelRoot ?? _currentUser.Level ?? "";
-                MessageBox.Show(role);
 
                 if (role.ToLower() == "admin")
                     Btn_Admin.Visibility = Visibility.Visible;

@@ -37,7 +37,7 @@ namespace Kazakov_KP_01._01.Elements
                 case "moderator":
                     RoleBadge.Background = new SolidColorBrush(Color.FromArgb(40, 255, 170, 0));
                     TxtRole.Foreground = new SolidColorBrush(Color.FromRgb(255, 170, 0));
-                    TxtRole.Text = "Moderator";
+                    TxtRole.Text = "User";
                     break;
                 default:
                     RoleBadge.Background = new SolidColorBrush(Color.FromArgb(40, 110, 116, 133));
