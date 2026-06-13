@@ -24,6 +24,7 @@ namespace Kazakov_KP_01._01.Services
             content.Add(new StringContent(username), "Usname");
             content.Add(new StringContent(password), "Password");
 
+
             var response = await _client.PostAsync("Users/Login", content);
             if (response.IsSuccessStatusCode)
             {
@@ -223,6 +224,50 @@ namespace Kazakov_KP_01._01.Services
                 var errorBody = await response.Content.ReadAsStringAsync();
                 return string.IsNullOrEmpty(errorBody) ? $"Ошибка: {response.StatusCode}" : errorBody;
             }
+        }
+
+        public async Task<List<Users>> GetAllUsersAsync()
+        {
+            try
+            {
+                var response = await _client.GetAsync($"Users/GetAll?token={SessionManager.Token}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<Users>>(json);
+                }
+                return new List<Users>();
+            }
+            catch { return new List<Users>(); }
+        }
+
+        public async Task<string> ToggleBanAsync(int userId, bool ban)
+        {
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(userId.ToString()), "userId");
+            content.Add(new StringContent(ban.ToString().ToLower()), "isBanned");
+
+            var request = new HttpRequestMessage(HttpMethod.Put, $"Users/SetBan?token={SessionManager.Token}")
+            {
+                Content = content
+            };
+
+            var response = await _client.SendAsync(request);
+            return response.IsSuccessStatusCode ? "Success" : await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<string> DeleteUserAsync(int userId)
+        {
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(userId.ToString()), "userId");
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"Users/Delete?token={SessionManager.Token}")
+            {
+                Content = content
+            };
+
+            var response = await _client.SendAsync(request);
+            return response.IsSuccessStatusCode ? "Success" : await response.Content.ReadAsStringAsync();
         }
     }
 }

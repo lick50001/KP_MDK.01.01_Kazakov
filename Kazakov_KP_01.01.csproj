@@ -63,6 +63,9 @@
     <Compile Include="Elements\FinanceLog.xaml.cs">
       <DependentUpon>FinanceLog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Elements\UserElement.xaml.cs">
+      <DependentUpon>UserElement.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IntToVisibilityConverter.cs" />
     <Compile Include="Elements\Item.xaml.cs">
       <DependentUpon>Item.xaml</DependentUpon>
@@ -72,6 +75,12 @@
     </Compile>
     <Compile Include="Models\Finance.cs" />
     <Compile Include="Models\LoginResponse.cs" />
+    <Compile Include="Pages\AddUserWindow.xaml.cs">
+      <DependentUpon>AddUserWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AdminPage.xaml.cs">
+      <DependentUpon>AdminPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>
@@ -91,6 +100,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Elements\UserElement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,6 +116,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\AddUserWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AdminPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\DashboardPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

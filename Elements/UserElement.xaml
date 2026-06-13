@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="Kazakov_KP_01._01.Elements.UserElement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="52">
+    <Border Background="#252833" CornerRadius="10" Margin="0,4" x:Name="MainBorder">
+        <Grid Margin="0,0,8,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="TxtId" Text="1" Foreground="#6E7485"
+                       FontSize="14" FontFamily="Exo 2" VerticalAlignment="Center" Margin="12,0,0,0"/>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="32" Height="32" CornerRadius="16" Background="#33FFFFFF" Margin="0,0,10,0">
+                    <TextBlock x:Name="TxtAvatar" Text="М" Foreground="White"
+                               FontSize="14" FontWeight="Bold" FontFamily="Exo 2"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock x:Name="TxtName" Text="user" Foreground="White"
+                           FontSize="15" FontFamily="Exo 2" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Бейдж роли -->
+            <Border Grid.Column="2" x:Name="RoleBadge" CornerRadius="6"
+                    Padding="10,4" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <TextBlock x:Name="TxtRole" Text="User" FontSize="13"
+                           FontFamily="Exo 2" FontWeight="SemiBold"/>
+            </Border>
+
+            <!-- Статус -->
+            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                <Ellipse x:Name="StatusDot" Width="8" Height="8" Margin="0,0,8,0"/>
+                <TextBlock x:Name="TxtStatus" Text="Активен" Foreground="White"
+                           FontSize="14" FontFamily="Exo 2" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Кнопки -->
+            <StackPanel Grid.Column="4" Orientation="Horizontal"
+                        VerticalAlignment="Center" HorizontalAlignment="Right">
+                <Button x:Name="BtnBan" Content="⛔" Width="32" Height="32"
+                        Margin="0,0,8,0" Click="BtnBan_Click"
+                        Background="#26FF4D4D" Foreground="#FF4D4D"
+                        BorderThickness="0" Cursor="Hand" ToolTip="Заблокировать">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button x:Name="BtnDelete" Content="🗑" Width="32" Height="32"
+                        Click="BtnDelete_Click"
+                        Background="#26FF4D4D" Foreground="#FF4D4D"
+                        BorderThickness="0" Cursor="Hand" ToolTip="Удалить">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

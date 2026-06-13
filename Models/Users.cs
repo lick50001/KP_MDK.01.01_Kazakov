@@ -12,5 +12,7 @@ namespace Kazakov_KP_01._01.Models
         public string UserName { get; set; }
         public string PwdHash { get; set; }
         public string LevelRoot { get; set; }
+        public bool IsBanned { get; set; }
+        public string Level { get; set; }
     }
 }

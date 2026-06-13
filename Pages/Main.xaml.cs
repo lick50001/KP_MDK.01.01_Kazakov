@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using Kazakov_KP_01._01.Classes;
+using Kazakov_KP_01._01.Models;
+using Kazakov_KP_01._01.Services;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Kazakov_KP_01._01.Models;
-using Kazakov_KP_01._01.Services;
 
 namespace Kazakov_KP_01._01.Pages
 {
@@ -28,9 +29,19 @@ namespace Kazakov_KP_01._01.Pages
         {
             _currentUser = await _api.GetCurrentUserAsync();
             if (_currentUser != null)
+            {
                 tb_Role.Text = $"{_currentUser.LevelRoot}: {_currentUser.UserName}";
+
+                string role = SessionManager.CurrentRole ?? _currentUser.LevelRoot ?? _currentUser.Level ?? "";
+                MessageBox.Show(role);
+
+                if (role.ToLower() == "admin")
+                    Btn_Admin.Visibility = Visibility.Visible;
+            }
             else
+            {
                 tb_Role.Text = "Не авторизован";
+            }
         }
 
         private void Nav_Home(object sender, MouseButtonEventArgs e)
@@ -65,6 +76,14 @@ namespace Kazakov_KP_01._01.Pages
             UpdateUI("Btn_Finance", "// ФИНАНСЫ");
         }
 
+        private void Nav_Admin(object sender, MouseButtonEventArgs e)
+        {
+            Big_Circle.Visibility = Visibility.Visible;
+            Little_Circle.Visibility = Visibility.Hidden;
+            MainFrame.Navigate(new AdminPage());
+            UpdateUI("Btn_Admin", "// АДМИНКА");
+        }
+
         private void UpdateUI(string btnName, string headerText)
         {
             txtHeader.Text = headerText;
@@ -73,6 +92,7 @@ namespace Kazakov_KP_01._01.Pages
             Btn_Func.Foreground = new SolidColorBrush(Color.FromRgb(110, 116, 133));
             Btn_Price.Foreground = new SolidColorBrush(Color.FromRgb(110, 116, 133));
             Btn_Finance.Foreground = new SolidColorBrush(Color.FromRgb(110, 116, 133));
+            Btn_Admin.Foreground = new SolidColorBrush(Color.FromRgb(110, 116, 133));
 
             if (this.FindName(btnName) is TextBlock tb) tb.Foreground = Brushes.White;
         }
