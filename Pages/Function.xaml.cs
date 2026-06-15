@@ -1,28 +1,55 @@
-﻿using System;
+﻿using Kazakov_KP_01._01.Elements;
+using Kazakov_KP_01._01.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Kazakov_KP_01._01.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для Function.xaml
-    /// </summary>
     public partial class Function : Page
     {
+        // Список функций. Для расширения — просто добавь новый элемент сюда.
+        private List<FunctionItem> _functions = new List<FunctionItem>
+        {
+            new FunctionItem
+            {
+                Title = "Авто-скупка предметов",
+                Icon = "🛒",
+                Description = "Автоматически отслеживает рынок и выкупает предметы по выгодной цене из списка. " +
+                               "После запуска работает в фоне и логирует все операции в раздел \"Главная\"."
+            }
+        };
+
         public Function()
         {
             InitializeComponent();
+        }
+
+        private void Function_Loaded(object sender, RoutedEventArgs e)
+        {
+            RenderFunctions();
+        }
+
+        private void RenderFunctions()
+        {
+            FunctionsContainer.Children.Clear();
+
+            foreach (var func in _functions)
+            {
+                var card = new FunctionCard(func)
+                {
+                    Margin = new Thickness(0, 0, 30, 30)
+                };
+
+                card.OnOpen += (item) =>
+                {
+                    var win = new FunctionWindow(item);
+                    win.ShowDialog();
+                    card.UpdateStatus(); // обновляем бейдж после закрытия окна
+                };
+
+                FunctionsContainer.Children.Add(card);
+            }
         }
     }
 }

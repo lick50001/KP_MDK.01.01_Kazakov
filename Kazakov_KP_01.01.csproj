@@ -63,6 +63,9 @@
     <Compile Include="Elements\FinanceLog.xaml.cs">
       <DependentUpon>FinanceLog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Elements\FunctionCard.xaml.cs">
+      <DependentUpon>FunctionCard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Elements\UserElement.xaml.cs">
       <DependentUpon>UserElement.xaml</DependentUpon>
     </Compile>
@@ -74,6 +77,7 @@
       <DependentUpon>Log.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Finance.cs" />
+    <Compile Include="Models\FunctionItem.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Pages\AddUserWindow.xaml.cs">
       <DependentUpon>AddUserWindow.xaml</DependentUpon>
@@ -84,11 +88,18 @@
     <Compile Include="Pages\EditWindow.xaml.cs">
       <DependentUpon>EditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\FunctionWindow.xaml.cs">
+      <DependentUpon>FunctionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Сhecklist.xaml.cs">
       <DependentUpon>Сhecklist.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ApiService.cs" />
     <Page Include="Elements\FinanceLog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\FunctionCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -137,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Function.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FunctionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
