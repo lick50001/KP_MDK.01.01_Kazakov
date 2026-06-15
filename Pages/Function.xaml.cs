@@ -8,7 +8,9 @@ namespace Kazakov_KP_01._01.Pages
 {
     public partial class Function : Page
     {
-        // Список функций. Для расширения — просто добавь новый элемент сюда.
+        // Храним модальное окно активным, чтобы была возможность обновлять его UI из фона
+        private FunctionWindow _currentOpenedWindow;
+
         private List<FunctionItem> _functions = new List<FunctionItem>
         {
             new FunctionItem
@@ -30,7 +32,7 @@ namespace Kazakov_KP_01._01.Pages
             RenderFunctions();
         }
 
-        private void RenderFunctions()
+        public void RenderFunctions()
         {
             FunctionsContainer.Children.Clear();
 
@@ -43,12 +45,46 @@ namespace Kazakov_KP_01._01.Pages
 
                 card.OnOpen += (item) =>
                 {
-                    var win = new FunctionWindow(item);
-                    win.ShowDialog();
-                    card.UpdateStatus(); // обновляем бейдж после закрытия окна
+                    // Открываем через .Show() (немодально), чтобы Frame и вкладки не блокировались!
+                    _currentOpenedWindow = new FunctionWindow(item);
+                    _currentOpenedWindow.Closed += (s, ev) => { _currentOpenedWindow = null; card.UpdateStatus(); };
+                    _currentOpenedWindow.Show();
                 };
 
                 FunctionsContainer.Children.Add(card);
+            }
+        }
+
+        // Метод фонового запуска (вызывается из Main)
+        public void HandleGlobalStart()
+        {
+            var targetFunc = _functions[0]; // Наша первая единственная функция
+            if (!targetFunc.IsRunning)
+            {
+                targetFunc.IsRunning = true;
+
+                // Если открыто окно этой функции — обновляем его кнопки и статус
+                _currentOpenedWindow?.UpdateStatusUI();
+
+                // Обновляем саму карточку на странице
+                RenderFunctions();
+
+                targetFunc.OnStart?.Invoke();
+            }
+        }
+
+        // Метод фоновой остановки (вызывается из Main)
+        public void HandleGlobalStop()
+        {
+            var targetFunc = _functions[0];
+            if (targetFunc.IsRunning)
+            {
+                targetFunc.IsRunning = false;
+
+                _currentOpenedWindow?.UpdateStatusUI();
+                RenderFunctions();
+
+                targetFunc.OnStop?.Invoke();
             }
         }
     }

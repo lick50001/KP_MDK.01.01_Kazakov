@@ -13,15 +13,43 @@ namespace Kazakov_KP_01._01.Pages
         {
             InitializeComponent();
             _item = item;
+            Render();
+        }
 
+        private void Render()
+        {
             TxtIcon.Text = _item.Icon;
             TxtTitle.Text = _item.Title;
             TxtDescription.Text = _item.Description;
 
+            // Выставляем текст для подсказки клавиш
+            TxtKeysHint.Text = "Включить: [F6]  |  Выключить: [F7]";
+
             UpdateStatusUI();
         }
 
-        private void UpdateStatusUI()
+        private void BtnStart_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_item.IsRunning)
+            {
+                _item.IsRunning = true;
+                UpdateStatusUI();
+                _item.OnStart?.Invoke();
+            }
+        }
+
+        private void BtnStop_Click(object sender, RoutedEventArgs e)
+        {
+            if (_item.IsRunning)
+            {
+                _item.IsRunning = false;
+                UpdateStatusUI();
+                _item.OnStop?.Invoke();
+            }
+        }
+
+        // Теперь метод public, чтобы страница Function могла обновить интерфейс окна из фона
+        public void UpdateStatusUI()
         {
             if (_item.IsRunning)
             {
@@ -45,27 +73,12 @@ namespace Kazakov_KP_01._01.Pages
             }
         }
 
-        private void BtnStart_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: здесь будет запуск бота-автоматизации для рынка
-            _item.IsRunning = true;
-            _item.OnStart?.Invoke();
-            UpdateStatusUI();
-        }
-
-        private void BtnStop_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: здесь будет остановка бота-автоматизации
-            _item.IsRunning = false;
-            _item.OnStop?.Invoke();
-            UpdateStatusUI();
-        }
+        private void CloseBtn_Click(object sender, RoutedEventArgs e) => Close();
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left) DragMove();
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
         }
-
-        private void CloseBtn_Click(object sender, RoutedEventArgs e) => Close();
     }
 }
