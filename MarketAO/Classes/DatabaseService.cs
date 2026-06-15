@@ -7,7 +7,7 @@ namespace MarketAO.Services
 {
     public class DatabaseService
     {
-        private readonly string _connectionString = "Server=localhost;Database=AlbionMarket;User ID=root;Password=;";
+        private readonly string _connectionString = "Server=localhost;Database=AlbionMarket;uid=root;pwd=;";
 
         public ObservableCollection<MarketItem> GetItems(string cityName, string orderType)
         {
