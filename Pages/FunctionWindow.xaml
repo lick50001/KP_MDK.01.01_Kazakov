@@ -57,7 +57,7 @@
                             <StackPanel>
                                 <TextBlock Text="Управление клавишами" Foreground="#6E7485" FontSize="13"
                                            FontFamily="Exo 2" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                                <TextBlock x:Name="TxtKeysHint" Text="Включить: [F5]  |  Выключить: [F6]" Foreground="#00FFC2"
+                                <TextBlock x:Name="TxtHotkeys" Text="Включить: [F6]  |  Выключить: [F7]" Foreground="#00FFC2"
                                            FontSize="14" FontFamily="Exo 2" FontWeight="Medium"/>
                             </StackPanel>
                         </Border>

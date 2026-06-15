@@ -32,7 +32,8 @@ namespace Kazakov_KP_01._01.Services
 
                 SessionManager.Token = data.token;
                 SessionManager.UserName = data.userName;
-                SessionManager.CurrentRole = data.levelRoot; // <-- вот это главное
+                SessionManager.CurrentRole = data.levelRoot;
+                SessionManager.SessionStartTime = DateTime.Now; // <-- старт отсчёта сессии
 
                 return data.token;
             }
@@ -54,7 +55,7 @@ namespace Kazakov_KP_01._01.Services
 
                 return null;
             }
-            catch{ return null; }          
+            catch { return null; }
         }
 
         public async Task<string> RegisterAsync(string username, string password, string level)
@@ -119,11 +120,17 @@ namespace Kazakov_KP_01._01.Services
 
             return new List<Finance>();
         }
-        public async Task<string> AddFinanceLogAsync(string fintype, string message)
+
+        /// <summary>
+        /// Добавляет финансовую запись с суммой.
+        /// amount > 0 — доход, amount < 0 — расход.
+        /// </summary>
+        public async Task<string> AddFinanceLogAsync(string fintype, string message, decimal amount)
         {
             var content = new MultipartFormDataContent();
-            content.Add(new StringContent(fintype), "fintype");
+            content.Add(new StringContent(fintype), "finType");
             content.Add(new StringContent(message), "message");
+            content.Add(new StringContent(amount.ToString(System.Globalization.CultureInfo.InvariantCulture)), "amount");
             content.Add(new StringContent(DateTime.Now.ToString("o")), "eventTime");
 
             var response = await _client.PostAsync($"Finance/Add?token={SessionManager.Token}", content);
@@ -152,7 +159,7 @@ namespace Kazakov_KP_01._01.Services
 
                 return new List<Items>();
             }
-            catch{ return new List<Items>(); }
+            catch { return new List<Items>(); }
         }
 
         public async Task<Items> GetItemByIdAsync(int id)

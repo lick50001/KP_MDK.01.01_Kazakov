@@ -75,6 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\FinanceCalculator.cs" />
     <Compile Include="Classes\SessionManager.cs" />
     <Compile Include="Elements\FinanceLog.xaml.cs">
       <DependentUpon>FinanceLog.xaml</DependentUpon>

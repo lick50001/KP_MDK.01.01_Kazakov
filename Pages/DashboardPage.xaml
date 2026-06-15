@@ -13,7 +13,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Карточки -->
         <UniformGrid Grid.Row="0" Columns="3" Margin="0,0,0,20">
 
             <Border Margin="0,0,10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
@@ -24,31 +23,22 @@
                 </StackPanel>
             </Border>
 
-            <!--<Border Margin="10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
-                <StackPanel Margin="30">
-                    <TextBlock Text="ПОДПИСКА" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                    <TextBlock Text="12 ДНЕЙ" FontSize="56" Margin="0 30 0 15" FontWeight="Bold" Foreground="#00FFC2" FontFamily="Exo 2"/>
-                </StackPanel>
-            </Border>-->
-
             <Border Margin="10,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
                 <StackPanel Margin="30">
                     <TextBlock Text="ПРИБЫЛЬ (24ч)" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                    <TextBlock Text="$151,521" FontSize="56" Margin="0 30 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
-
+                    <TextBlock x:Name="TxtProfit24h" Text="$0" FontSize="56" Margin="0 30 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
                 </StackPanel>
             </Border>
 
             <Border Margin="10,0,0,0" Height="192" BorderBrush="#FF33FFFF" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
                 <StackPanel Margin="30">
                     <TextBlock Text="ПРИБЫЛЬ (Сеанс)" FontSize="18" Foreground="#6E7485" FontFamily="Exo 2"/>
-                    <TextBlock Text="$38,151" FontSize="56" Margin="0 30 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
+                    <TextBlock x:Name="TxtProfitSession" Text="$0" FontSize="56" Margin="0 30 0 15" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Exo 2"/>
                 </StackPanel>
             </Border>
 
         </UniformGrid>
 
-        <!-- Логи -->
         <Border Grid.Row="1"
                 BorderBrush="#FF33FFFF"
                 BorderThickness="0.42"

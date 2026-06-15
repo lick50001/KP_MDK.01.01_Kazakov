@@ -163,7 +163,6 @@
                         BorderBrush="#33FFFFFF" BorderThickness="1">
                     <ComboBox x:Name="cb_Role" Style="{StaticResource DarkComboBox}" SelectedIndex="0">
                         <ComboBoxItem Style="{StaticResource DarkComboBoxItem}">User</ComboBoxItem>
-                        <ComboBoxItem Style="{StaticResource DarkComboBoxItem}">Moderator</ComboBoxItem>
                         <ComboBoxItem Style="{StaticResource DarkComboBoxItem}">Admin</ComboBoxItem>
                     </ComboBox>
                 </Border>

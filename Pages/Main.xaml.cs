@@ -2,12 +2,10 @@
 using Kazakov_KP_01._01.Models;
 using Kazakov_KP_01._01.Services;
 using System;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace Kazakov_KP_01._01.Pages
@@ -17,67 +15,11 @@ namespace Kazakov_KP_01._01.Pages
         private ApiService _api = new ApiService();
         public Users _currentUser;
 
-        #region Win32 API для фонового отслеживания F6 и F7
-        [DllImport("user32.dll")]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-
-        [DllImport("user32.dll")]
-        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
-
-        private const int WM_HOTKEY = 0x0312;
-        private const int HOTKEY_F6_ID = 9006;
-        private const int HOTKEY_F7_ID = 9007;
-
-        private const uint VK_F6 = 0x75; // Код клавиши F6
-        private const uint VK_F7 = 0x76; // Код клавиши F7
-        private const uint MOD_NONE = 0x0000;
-
-        private IntPtr _windowHandle;
-        private HwndSource _source;
-        #endregion
-
         public Main()
         {
             InitializeComponent();
             Loaded += Main_Loaded;
             MainFrame.Navigate(new DashboardPage());
-        }
-
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-
-            _windowHandle = new WindowInteropHelper(this).Handle;
-            _source = HwndSource.FromHwnd(_windowHandle);
-            _source.AddHook(HwndHook);
-
-            // Регистрируем глобальные клавиши в системе Windows
-            RegisterHotKey(_windowHandle, HOTKEY_F6_ID, MOD_NONE, VK_F6);
-            RegisterHotKey(_windowHandle, HOTKEY_F7_ID, MOD_NONE, VK_F7);
-        }
-
-        private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            if (msg == WM_HOTKEY)
-            {
-                int id = wParam.ToInt32();
-
-                // Если во Frame сейчас открыта страница функций, транслируем нажатие туда
-                if (MainFrame.Content is Function functionPage)
-                {
-                    if (id == HOTKEY_F6_ID)
-                    {
-                        functionPage.HandleGlobalStart(); // Вызываем старт на странице
-                        handled = true;
-                    }
-                    else if (id == HOTKEY_F7_ID)
-                    {
-                        functionPage.HandleGlobalStop(); // Вызываем стоп на странице
-                        handled = true;
-                    }
-                }
-            }
-            return IntPtr.Zero;
         }
 
         private async void Main_Loaded(object sender, RoutedEventArgs e)
@@ -156,14 +98,5 @@ namespace Kazakov_KP_01._01.Pages
         private void Window_MouseDown(object sender, MouseButtonEventArgs e) { if (e.LeftButton == MouseButtonState.Pressed) DragMove(); }
         private void CloseBtn_Click(object sender, RoutedEventArgs e) => Close();
         private void MinimizeBtn_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
-
-        protected override void OnClosed(EventArgs e)
-        {
-            // Чистим за собой глобальные хуки при выходе
-            _source?.RemoveHook(HwndHook);
-            UnregisterHotKey(_windowHandle, HOTKEY_F6_ID);
-            UnregisterHotKey(_windowHandle, HOTKEY_F7_ID);
-            base.OnClosed(e);
-        }
     }
 }

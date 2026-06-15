@@ -1,24 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Kazakov_KP_01._01.Classes;
+using Kazakov_KP_01._01.Services;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Kazakov_KP_01._01.Services;
 
 namespace Kazakov_KP_01._01.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для FinancePage.xaml
-    /// </summary>
     public partial class FinancePage : Page
     {
         public FinancePage()
@@ -35,22 +23,23 @@ namespace Kazakov_KP_01._01.Pages
         {
             ApiService _api = new ApiService();
             var fins = await _api.GetFinanceLogAsync();
+
+            var summary = FinanceCalculator.Calculate(fins);
+            TxtTotalProfit.Text = FinanceCalculator.FormatMoney(summary.TotalProfit);
+
             FinanceLogsContainer.Children.Clear();
 
-            foreach (var fin in fins)
+            foreach (var fin in fins.OrderByDescending(f => f.EventTime))
             {
                 var finRow = new Kazakov_KP_01._01.Elements.FinanceLog();
 
-                if (finRow != null)
-                {
-                    finRow.SetData(
-                        fin.EventTime.ToString("HH:mm"),
-                        fin.Message,
-                        fin.FinanceType
-                    );
+                finRow.SetData(
+                    fin.EventTime.ToString("HH:mm"),
+                    $"{fin.Message}  ({FinanceCalculator.FormatMoney(fin.Amount)})",
+                    fin.FinanceType
+                );
 
-                    FinanceLogsContainer.Children.Add(finRow);
-                }
+                FinanceLogsContainer.Children.Add(finRow);
             }
         }
     }

@@ -11,5 +11,8 @@ namespace Kazakov_KP_01._01.Classes
         public static string Token { get; set; }
         public static string UserName { get; set; }
         public static string CurrentRole { get; set; }
+
+        public static DateTime SessionStartTime { get; set; } = DateTime.Now;
+
     }
 }

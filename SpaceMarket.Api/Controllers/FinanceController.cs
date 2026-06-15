@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpaceMarket.Api.Context;
@@ -29,6 +28,7 @@ namespace SpaceMarket.Api.Controllers
                     Finance_Id = i.Finance_Id,
                     FinanceType = i.FinanceType,
                     Message = i.Message,
+                    Amount = i.Amount,
                     EventTime = i.EventTime,
                     UserId = i.UserId
                 })
@@ -38,7 +38,12 @@ namespace SpaceMarket.Api.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult> AddMyFinance([FromQuery] string token, [FromForm] string finType, [FromForm] string message, [FromForm] DateTime eventTime)
+        public async Task<ActionResult> AddMyFinance(
+            [FromQuery] string token,
+            [FromForm] string finType,
+            [FromForm] string message,
+            [FromForm] decimal amount,
+            [FromForm] DateTime eventTime)
         {
             var userIdStr = VerifyToken(token);
             if (string.IsNullOrEmpty(userIdStr))
@@ -49,6 +54,7 @@ namespace SpaceMarket.Api.Controllers
             {
                 FinanceType = finType,
                 Message = message,
+                Amount = amount,
                 EventTime = eventTime,
                 UserId = usId,
             };
@@ -58,7 +64,13 @@ namespace SpaceMarket.Api.Controllers
         }
 
         [HttpPut("Edit")]
-        public async Task<ActionResult> EditMyFinance([FromQuery] string token, [FromForm] int finid, [FromForm] string finType, [FromForm] string message, [FromForm] DateTime eventTime)
+        public async Task<ActionResult> EditMyFinance(
+            [FromQuery] string token,
+            [FromForm] int finid,
+            [FromForm] string finType,
+            [FromForm] string message,
+            [FromForm] decimal amount,
+            [FromForm] DateTime eventTime)
         {
             var userIdStr = VerifyToken(token);
             if (string.IsNullOrEmpty(userIdStr))
@@ -72,6 +84,7 @@ namespace SpaceMarket.Api.Controllers
 
             bdFins.FinanceType = finType;
             bdFins.Message = message;
+            bdFins.Amount = amount;
             bdFins.EventTime = eventTime;
 
             await _context.SaveChangesAsync();
