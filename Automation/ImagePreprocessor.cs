@@ -93,5 +93,77 @@ namespace Kazakov_KP_01._01.Automation
             scaled.Dispose();
             return binarized;
         }
+
+        /// <summary>
+        /// Бинаризация с автоматическим подбором порога методом Оцу.
+        /// Не требует ручной настройки threshold — анализирует гистограмму
+        /// яркости изображения и сам находит оптимальную границу между
+        /// текстом и фоном. Существенно надёжнее фиксированного порога
+        /// для UI с неоднородной подсветкой/градиентами.
+        /// </summary>
+        public static Bitmap BinarizeOtsu(Bitmap source, bool invert = false)
+        {
+            var gray = ToGrayscale(source);
+
+            // Строим гистограмму яркости
+            int[] histogram = new int[256];
+            int totalPixels = gray.Width * gray.Height;
+
+            for (int y = 0; y < gray.Height; y++)
+            {
+                for (int x = 0; x < gray.Width; x++)
+                {
+                    histogram[gray.GetPixel(x, y).R]++;
+                }
+            }
+
+            // Метод Оцу — находим порог, максимизирующий межклассовую дисперсию
+            double sumAll = 0;
+            for (int i = 0; i < 256; i++) sumAll += i * histogram[i];
+
+            double sumBackground = 0;
+            int countBackground = 0;
+            double maxVariance = 0;
+            int bestThreshold = 128;
+
+            for (int t = 0; t < 256; t++)
+            {
+                countBackground += histogram[t];
+                if (countBackground == 0) continue;
+
+                int countForeground = totalPixels - countBackground;
+                if (countForeground == 0) break;
+
+                sumBackground += t * histogram[t];
+
+                double meanBackground = sumBackground / countBackground;
+                double meanForeground = (sumAll - sumBackground) / countForeground;
+
+                double variance = (double)countBackground * countForeground *
+                    (meanBackground - meanForeground) * (meanBackground - meanForeground);
+
+                if (variance > maxVariance)
+                {
+                    maxVariance = variance;
+                    bestThreshold = t;
+                }
+            }
+
+            var result = Binarize(gray, (byte)bestThreshold, invert);
+            gray.Dispose();
+            return result;
+        }
+
+        /// <summary>
+        /// Готовый пайплайн с автоматическим порогом — используй вместо
+        /// PrepareForOcr, если изображение имеет неоднородный фон/подсветку.
+        /// </summary>
+        public static Bitmap PrepareForOcrAdaptive(Bitmap source, float scale = 3f, bool invert = false)
+        {
+            var scaled = Scale(source, scale);
+            var binarized = BinarizeOtsu(scaled, invert);
+            scaled.Dispose();
+            return binarized;
+        }
     }
 }

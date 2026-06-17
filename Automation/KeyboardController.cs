@@ -55,8 +55,8 @@ namespace Kazakov_KP_01._01.Automation
 
         #region SendMessage (прямой ввод в окно)
 
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
+        private static extern IntPtr SendMessageW(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetFocus();
@@ -104,7 +104,7 @@ namespace Kazakov_KP_01._01.Automation
 
             foreach (char c in text)
             {
-                SendMessage(hWnd, WM_CHAR, (IntPtr)c, IntPtr.Zero);
+                SendMessageW(hWnd, WM_CHAR, (IntPtr)c, IntPtr.Zero);
                 await Task.Delay(delayBetweenCharsMs + rng.Next(-10, 15));
             }
         }
@@ -140,13 +140,13 @@ namespace Kazakov_KP_01._01.Automation
             const int VK_DELETE_INT = 0x2E;
             const int VK_CONTROL_INT = 0x11;
 
-            SendMessage(hWnd, WM_KEYDOWN, (IntPtr)VK_CONTROL_INT, IntPtr.Zero);
-            SendMessage(hWnd, WM_KEYDOWN, (IntPtr)VK_A_INT, IntPtr.Zero);
-            SendMessage(hWnd, WM_KEYUP, (IntPtr)VK_A_INT, IntPtr.Zero);
-            SendMessage(hWnd, WM_KEYUP, (IntPtr)VK_CONTROL_INT, IntPtr.Zero);
+            SendMessageW(hWnd, WM_KEYDOWN, (IntPtr)VK_CONTROL_INT, IntPtr.Zero);
+            SendMessageW(hWnd, WM_KEYDOWN, (IntPtr)VK_A_INT, IntPtr.Zero);
+            SendMessageW(hWnd, WM_KEYUP, (IntPtr)VK_A_INT, IntPtr.Zero);
+            SendMessageW(hWnd, WM_KEYUP, (IntPtr)VK_CONTROL_INT, IntPtr.Zero);
 
-            SendMessage(hWnd, WM_KEYDOWN, (IntPtr)VK_DELETE_INT, IntPtr.Zero);
-            SendMessage(hWnd, WM_KEYUP, (IntPtr)VK_DELETE_INT, IntPtr.Zero);
+            SendMessageW(hWnd, WM_KEYDOWN, (IntPtr)VK_DELETE_INT, IntPtr.Zero);
+            SendMessageW(hWnd, WM_KEYUP, (IntPtr)VK_DELETE_INT, IntPtr.Zero);
         }
 
         public static void ClearWithBackspace(int approximateLength)

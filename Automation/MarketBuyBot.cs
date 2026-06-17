@@ -63,7 +63,7 @@ namespace Kazakov_KP_01._01.Automation
             await Task.Delay(800, _ctx.Token);
 
             // Шаг 2 — распознаём цену через OCR
-            decimal? price = _ctx.Ocr.ReadNumberInWindow(_ctx.Market, PriceRegion, invert: true);
+            decimal? price = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, PriceRegion);
 
             if (!price.HasValue)
             {

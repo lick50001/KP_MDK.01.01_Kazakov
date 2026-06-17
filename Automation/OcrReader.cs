@@ -41,7 +41,6 @@ namespace Kazakov_KP_01._01.Automation
 
         public OcrResult ReadRegion(Rectangle screenRegion, bool invert = false)
         {
-            // ИСПРАВЛЕНО: обернули в классический using с блоком {}
             using (var screenshot = ScreenCapture.CaptureRegion(screenRegion))
             {
                 using (var prepared = ImagePreprocessor.PrepareForOcr(screenshot, scale: 3f, threshold: 128, invert: invert))
@@ -59,7 +58,6 @@ namespace Kazakov_KP_01._01.Automation
 
         public OcrResult ReadRegionCustom(Rectangle screenRegion, Func<Bitmap, Bitmap> preprocess)
         {
-            // ИСПРАВЛЕНО: классический using с блоком {}
             using (var screenshot = ScreenCapture.CaptureRegion(screenRegion))
             {
                 using (var prepared = preprocess(screenshot))
@@ -87,7 +85,6 @@ namespace Kazakov_KP_01._01.Automation
 
         public OcrResult ReadBitmap(Bitmap bitmap, Rectangle? sourceRegion = null)
         {
-            // ИСПРАВЛЕНО: классический using с блоком {}
             using (var pix = BitmapToPix(bitmap))
             {
                 using (var page = _engine.Process(pix))
@@ -124,7 +121,6 @@ namespace Kazakov_KP_01._01.Automation
 
         private Pix BitmapToPix(Bitmap bitmap)
         {
-            // ИСПРАВЛЕНО: классический using с блоком {}
             using (var stream = new MemoryStream())
             {
                 bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
@@ -138,6 +134,69 @@ namespace Kazakov_KP_01._01.Automation
             if (_disposed) return;
             _engine?.Dispose();
             _disposed = true;
+        }
+
+        /// <summary>
+        /// Распознаёт число, автоматически пробуя оба варианта инверсии
+        /// (светлый текст на тёмном / тёмный на светлом) и выбирая результат
+        /// с более высокой уверенностью распознавания.
+        /// </summary>
+        public decimal? ReadNumberAdaptive(Rectangle screenRegion)
+        {
+            var normal = ReadNumberWithConfidence(screenRegion, invert: false);
+            var inverted = ReadNumberWithConfidence(screenRegion, invert: true);
+
+            var best = inverted.Confidence >= normal.Confidence ? inverted : normal;
+            return best.Value;
+        }
+
+        public decimal? ReadNumberAdaptiveInWindow(MarketWindow market, Rectangle relativeRegion)
+        {
+            var screenRegion = market.ToScreen(relativeRegion);
+            return ReadNumberAdaptive(screenRegion);
+        }
+
+        private (decimal? Value, float Confidence) ReadNumberWithConfidence(Rectangle screenRegion, bool invert)
+        {
+            // ИСПРАВЛЕНО: Заменили "using var" на классические вложенные блоки using под C# 7.3
+            using (var screenshot = ScreenCapture.CaptureRegion(screenRegion))
+            {
+                using (var prepared = ImagePreprocessor.PrepareForOcrAdaptive(screenshot, scale: 4f, invert: invert))
+                {
+                    var result = ReadBitmap(prepared, screenRegion);
+                    decimal? parsed = ParseNumberStrict(result.Text);
+                    return (parsed, parsed.HasValue ? result.Confidence : 0f);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Строгий парсинг числа — отбрасывает результат, если в строке
+        /// остался хоть один не-цифровой символ после очистки разделителей.
+        /// </summary>
+        private decimal? ParseNumberStrict(string rawText)
+        {
+            string cleaned = rawText
+                .Replace(" ", "")
+                .Replace("\n", "")
+                .Replace("\r", "")
+                .Replace(",", "")
+                .Trim();
+
+            if (string.IsNullOrEmpty(cleaned)) return null;
+
+            foreach (char c in cleaned)
+            {
+                if (!char.IsDigit(c) && c != '.') return null;
+            }
+
+            if (decimal.TryParse(cleaned, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out decimal value))
+            {
+                return value;
+            }
+
+            return null;
         }
     }
 }
