@@ -75,7 +75,6 @@ namespace MarketAO.Pages
             var allSellOrders = new List<MarketOrder>();
             var allBuyOrders = new List<MarketOrder>();
 
-            // === 1. НАСТОЯЩИЕ ЗАКАЗЫ ИЗ БД ===
             var realMarketItems = _db.GetBuyItems(_city).Where(x => x.ItemId == _item.ItemId).ToList();
             foreach (var mItem in realMarketItems)
             {
@@ -86,7 +85,6 @@ namespace MarketAO.Pages
                 });
             }
 
-            // === 2. РАНДОМНЫЕ ЗАКАЗЫ НА ПРОДАЖУ (Конкуренты-продавцы) ===
             long currentSellPrice = basePrice;
             for (int i = 0; i < 20; i++)
             {
@@ -100,7 +98,6 @@ namespace MarketAO.Pages
                 });
             }
 
-            // === 3. РАНДОМНЫЕ ЗАКАЗЫ НА ПОКУПКУ (Скупщики: чаще 5-30%, редко до 70%) ===
             for (int i = 0; i < 20; i++)
             {
                 double randomFactor = 0.05 + (Math.Pow(rnd.NextDouble(), 3) * 0.65);
@@ -114,7 +111,6 @@ namespace MarketAO.Pages
                 });
             }
 
-            // === 4. СОРТИРОВКА И ВЫВОД НА ЭКРАН ===
             allSellOrders = allSellOrders.OrderBy(x => x.RawPrice).ToList();
             allBuyOrders = allBuyOrders.OrderByDescending(x => x.RawPrice).ToList();
 

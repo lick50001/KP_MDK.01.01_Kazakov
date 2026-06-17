@@ -66,7 +66,6 @@ namespace MarketAO.Pages
             var item = (sender as Button)?.Tag as MarketItem;
             if (item == null) return;
 
-            // ПЕРЕДАЕМ ГОРОД _currentCity
             var dialog = new TransactionWindow(item, TransactionMode.Buy, _currentCity, _db)
             {
                 Owner = Window.GetWindow(this)
@@ -74,7 +73,7 @@ namespace MarketAO.Pages
 
             if (dialog.ShowDialog() == true)
             {
-                LoadBuyData(); // Обновляем рынок после покупки
+                LoadBuyData();
             }
         }
 

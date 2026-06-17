@@ -22,19 +22,17 @@ namespace MarketAO
 
         private void City_Click(object sender, MouseButtonEventArgs e)
         {
-            // Получаем конкретный Border, на который нажали
             var clickedBorder = sender as Border;
 
             if (clickedBorder != null && clickedBorder.Tag != null)
             {
                 string cityName = clickedBorder.Tag.ToString();
 
-                // Создаем окно рынка, передавая название города
                 AlbionMarketWindow aoM = new AlbionMarketWindow(cityName);
-                aoM.Owner = this; // Чтобы окно центрировалось относительно карты
+                aoM.Owner = this;
                 aoM.Show();
 
-                this.Hide(); // Прячем карту
+                this.Hide();
             }
         }
     }

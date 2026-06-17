@@ -7,7 +7,6 @@ namespace MarketAO.Services
     {
         private static BalanceService _instance;
 
-        // Классическая реализация Singleton для C# 7.3
         public static BalanceService Instance
         {
             get

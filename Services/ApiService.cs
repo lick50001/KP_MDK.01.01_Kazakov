@@ -33,7 +33,7 @@ namespace Kazakov_KP_01._01.Services
                 SessionManager.Token = data.token;
                 SessionManager.UserName = data.userName;
                 SessionManager.CurrentRole = data.levelRoot;
-                SessionManager.SessionStartTime = DateTime.Now; // <-- старт отсчёта сессии
+                SessionManager.SessionStartTime = DateTime.Now;
 
                 return data.token;
             }
@@ -121,10 +121,6 @@ namespace Kazakov_KP_01._01.Services
             return new List<Finance>();
         }
 
-        /// <summary>
-        /// Добавляет финансовую запись с суммой.
-        /// amount > 0 — доход, amount < 0 — расход.
-        /// </summary>
         public async Task<string> AddFinanceLogAsync(string fintype, string message, decimal amount)
         {
             var content = new MultipartFormDataContent();

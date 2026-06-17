@@ -6,7 +6,6 @@
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
 
     <Window.Resources>
-        <!-- Стиль для удаления подсветки и отступов ListViewItem -->
         <Style x:Key="MarketListViewItemStyle" TargetType="ListViewItem">
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Margin" Value="0,1"/>
@@ -29,7 +28,6 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- ЛЕВАЯ ПАНЕЛЬ -->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -64,7 +62,6 @@
 
                         <Rectangle Fill="#4D3326" Height="1" Margin="0,10"/>
 
-                        <!-- Поле для вывода налога -->
                         <Grid x:Name="TaxGrid" Margin="0,0,0,10">
                             <TextBlock Text="Налог (10%):" Foreground="#907060" FontSize="14" VerticalAlignment="Center"/>
                             <TextBlock x:Name="TaxText" Text="0" Foreground="#FF6B6B" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold"/>
@@ -83,7 +80,6 @@
                 </UniformGrid>
             </Grid>
 
-            <!-- ПРАВАЯ ПАНЕЛЬ -->
             <Border Grid.Column="2" Background="#1A1511" CornerRadius="8" BorderBrush="#4D3326" BorderThickness="1" Padding="12">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -118,7 +114,6 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- BUY LIST (Левая колонка списка - Продавцы) -->
                         <ListView x:Name="BuyOrdersList" Grid.Column="0" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MarketListViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
@@ -136,7 +131,6 @@
 
                         <Rectangle Grid.Column="1" Fill="#25201C" Width="1" Margin="12,0"/>
 
-                        <!-- SELL LIST (Правая колонка списка - Скупщики) -->
                         <ListView x:Name="SellOrdersList" Grid.Column="2" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource MarketListViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                             <ListView.ItemTemplate>
                                 <DataTemplate>

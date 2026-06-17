@@ -25,21 +25,18 @@
                            FontSize="15" FontFamily="Exo 2" VerticalAlignment="Center"/>
             </StackPanel>
 
-            <!-- Бейдж роли -->
             <Border Grid.Column="2" x:Name="RoleBadge" CornerRadius="6"
                     Padding="10,4" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock x:Name="TxtRole" Text="User" FontSize="13"
                            FontFamily="Exo 2" FontWeight="SemiBold"/>
             </Border>
 
-            <!-- Статус -->
             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
                 <Ellipse x:Name="StatusDot" Width="8" Height="8" Margin="0,0,8,0"/>
                 <TextBlock x:Name="TxtStatus" Text="Активен" Foreground="White"
                            FontSize="14" FontFamily="Exo 2" VerticalAlignment="Center"/>
             </StackPanel>
 
-            <!-- Кнопки -->
             <StackPanel Grid.Column="4" Orientation="Horizontal"
                         VerticalAlignment="Center" HorizontalAlignment="Right">
                 <Button x:Name="BtnBan" Content="⛔" Width="32" Height="32"

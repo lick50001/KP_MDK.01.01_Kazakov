@@ -52,7 +52,6 @@ namespace Kazakov_KP_01._01.Pages
             _source = HwndSource.FromHwnd(_windowHandle);
             _source.AddHook(HwndHook);
 
-            // Регистрируем хоткеи ТОЛЬКО пока это окно открыто
             RegisterHotKey(_windowHandle, HOTKEY_START_ID, MOD_NONE, VK_F6);
             RegisterHotKey(_windowHandle, HOTKEY_STOP_ID, MOD_NONE, VK_F7);
         }
@@ -129,7 +128,6 @@ namespace Kazakov_KP_01._01.Pages
 
         protected override void OnClosed(EventArgs e)
         {
-            // Снимаем хоткеи при закрытии — после этого F6/F7 больше не перехватываются
             _source?.RemoveHook(HwndHook);
             UnregisterHotKey(_windowHandle, HOTKEY_START_ID);
             UnregisterHotKey(_windowHandle, HOTKEY_STOP_ID);

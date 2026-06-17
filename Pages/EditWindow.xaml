@@ -133,12 +133,10 @@
                             <ControlTemplate TargetType="Button">
                                 <Border Background="{TemplateBinding Background}" 
                     CornerRadius="0,10,0,10">
-                                    <!-- Используем ContentPresenter, чтобы отображать то, что написано в Content кнопки -->
                                     <ContentPresenter HorizontalAlignment="Center" 
                                   VerticalAlignment="Center"
                                   RecognizesAccessKey="True"/>
                                 </Border>
-                                <!-- Добавим стиль для текста внутри, если нужно задать шрифт -->
                                 <ControlTemplate.Resources>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="FontFamily" Value="Exo 2"/>

@@ -17,7 +17,6 @@ namespace MarketAO.Pages
 
         private void LoadData()
         {
-            // Получаем данные из БД и привязываем к списку
             ////HistoryList.ItemsSource = _db.GetHistoryItems(_currentCity);
         }
     }

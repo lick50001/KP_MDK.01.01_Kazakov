@@ -30,8 +30,6 @@
                     <Border Width="313" Height="85" Background="#252831" CornerRadius="9" VerticalAlignment="Top" Margin="22,911,22,0" BorderBrush="#FF33FFFF" BorderThickness="0.3">
                         <StackPanel Margin="10 0 0 0" VerticalAlignment="Center">
                             <TextBlock x:Name="tb_Role" Text="Не авторизован" Foreground="White" FontSize="22" FontWeight="SemiBold"/>
-                            <!--<TextBlock Text="Подписка:" Foreground="#00FFC2" FontSize="18" Margin="0 15 0 -10"/>
-                            <ProgressBar Value="12" Maximum="30" Height="4" Margin="0,15,0,0" Foreground="#D9D9D9" Background="Transparent"/>-->
                         </StackPanel>
                     </Border>
                 </Grid>

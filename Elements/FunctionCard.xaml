@@ -29,7 +29,6 @@
                 </Border>
             </Grid>
 
-            <!-- Заголовок + описание -->
             <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,20,0,0">
                 <TextBlock x:Name="TxtTitle" Text="Название функции" Foreground="White"
                            FontSize="22" FontWeight="Bold" FontFamily="Exo 2" Margin="0,0,0,12"/>
@@ -37,7 +36,6 @@
                            FontSize="15" FontFamily="Exo 2" TextWrapping="Wrap" MaxHeight="90" TextTrimming="CharacterEllipsis"/>
             </StackPanel>
 
-            <!-- Подсказка -->
             <Grid Grid.Row="2">
                 <TextBlock Text="Нажмите, чтобы открыть →" Foreground="#6E7485"
                            FontSize="13" FontFamily="Exo 2" VerticalAlignment="Center"/>

@@ -55,7 +55,6 @@
                                    IsHitTestVisible="False"
                                    VerticalAlignment="Center" Margin="2,0,0,0">
                             
-                            <!-- Привязка видимости к длине пароля через конвертер -->
                                 <TextBlock.Visibility>
                                     <Binding Path="Password.Length" 
                                          RelativeSource="{RelativeSource TemplatedParent}" 

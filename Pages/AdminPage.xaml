@@ -14,7 +14,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Статистика -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
             <Border Background="#1A1C24" CornerRadius="12" BorderBrush="#33FFFF" BorderThickness="0.4" 
                     Padding="24,16" Margin="0,0,16,0">
@@ -42,7 +41,6 @@
             </Border>
         </StackPanel>
 
-        <!-- Поиск + кнопка добавить -->
         <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -76,11 +74,9 @@
             </Button>
         </Grid>
 
-        <!-- Список пользователей -->
         <Border Grid.Row="2" Background="#1A1C24" CornerRadius="15" 
                 BorderBrush="#33FFFF" BorderThickness="0.4">
             <Grid>
-                <!-- Заголовок таблицы -->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>

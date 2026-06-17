@@ -2,13 +2,13 @@
 {
     public class MarketItem
     {
-        public int Id { get; set; }           // ID записи (строки на рынке)
-        public int ItemId { get; set; }       // ID самого предмета (для связи таблиц)
-        public string ItemName { get; set; }  // Название
-        public string Tier { get; set; }      // T4, T5 и т.д.
-        public int TierInt { get; set; }      // Число (для фильтра)
-        public long Price { get; set; }       // Цена (число)
-        public int Quantity { get; set; }     // Количество
+        public int Id { get; set; }
+        public int ItemId { get; set; } 
+        public string ItemName { get; set; }
+        public string Tier { get; set; }
+        public int TierInt { get; set; }
+        public long Price { get; set; }
+        public int Quantity { get; set; }
 
         public string PriceValue => Price.ToString("N0");
     }

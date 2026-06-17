@@ -26,7 +26,6 @@ namespace Kazakov_KP_01._01.Elements
             TxtAvatar.Text = _user.UserName.Length > 0
                 ? _user.UserName[0].ToString().ToUpper() : "?";
 
-            // Роль — бейдж с цветом
             switch (_user.Level?.ToLower())
             {
                 case "admin":
@@ -46,7 +45,6 @@ namespace Kazakov_KP_01._01.Elements
                     break;
             }
 
-            // Статус бан
             if (_user.IsBanned)
             {
                 StatusDot.Fill = new SolidColorBrush(Color.FromRgb(255, 77, 77));

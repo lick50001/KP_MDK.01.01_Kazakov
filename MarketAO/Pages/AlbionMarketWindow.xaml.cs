@@ -27,7 +27,7 @@ namespace MarketAO.Pages
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown(); // Закрывает текущее окно рынка
+            Application.Current.Shutdown();
         }
 
         private void Header_MouseDown(object sender, MouseButtonEventArgs e)
@@ -40,17 +40,16 @@ namespace MarketAO.Pages
 
         private void BackToMap_Click(object sender, RoutedEventArgs e)
         {
-            // Ищем среди открытых окон наше главное окно
             foreach (Window window in Application.Current.Windows)
             {
                 if (window is MainWindow)
                 {
-                    window.Show(); // Показываем карту
+                    window.Show();
                     break;
                 }
             }
 
-            this.Close(); // Закрываем текущее окно рынка
+            this.Close();
         }
     }
 }

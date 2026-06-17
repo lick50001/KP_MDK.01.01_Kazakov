@@ -17,7 +17,6 @@ namespace MarketAO.Services
                 using (var connection = new MySqlConnection(_connectionString))
                 {
                     connection.Open();
-                    // ДОБАВЛЕНО: достаем m.item_id
                     string sql = @"SELECT m.id, m.item_id, i.name, i.tier, m.price, m.amount 
                                    FROM market_orders m 
                                    JOIN items i ON m.item_id = i.id 
@@ -35,7 +34,7 @@ namespace MarketAO.Services
                                 items.Add(new MarketItem
                                 {
                                     Id = reader.GetInt32("id"),
-                                    ItemId = reader.GetInt32("item_id"), // Сохраняем системный ID предмета
+                                    ItemId = reader.GetInt32("item_id"),
                                     ItemName = reader.GetString("name"),
                                     TierInt = tier,
                                     Tier = "T" + tier,
@@ -53,7 +52,6 @@ namespace MarketAO.Services
 
         public void BuyItem(MarketItem item, int quantityToBuy, string buyerCity)
         {
-            // Списываем серебро
             long totalCost = item.Price * quantityToBuy;
             BalanceService.Instance.Subtract(totalCost);
 
@@ -64,10 +62,8 @@ namespace MarketAO.Services
                 {
                     try
                     {
-                        // 1. УБИРАЕМ КУПЛЕННОЕ С РЫНКА
                         if (quantityToBuy >= item.Quantity)
                         {
-                            // Купили весь лот — удаляем строку рынка
                             string sqlDelete = "DELETE FROM market_orders WHERE id = @id";
                             using (var cmd = new MySqlCommand(sqlDelete, connection, transaction))
                             {
@@ -77,7 +73,6 @@ namespace MarketAO.Services
                         }
                         else
                         {
-                            // Купили часть — отнимаем количество
                             string sqlUpdate = "UPDATE market_orders SET amount = amount - @bought WHERE id = @id";
                             using (var cmd = new MySqlCommand(sqlUpdate, connection, transaction))
                             {
@@ -87,8 +82,6 @@ namespace MarketAO.Services
                             }
                         }
 
-                        // 2. ДОБАВЛЯЕМ В ИНВЕНТАРЬ (СТАКАЕМ)
-                        // Проверяем, есть ли уже такой предмет в инвентаре в этом городе
                         string checkInvSql = "SELECT id FROM market_orders WHERE item_id = @itemId AND city = @city AND order_type = 'sell' LIMIT 1";
                         object existingInvId = null;
                         using (var cmd = new MySqlCommand(checkInvSql, connection, transaction))
@@ -100,7 +93,6 @@ namespace MarketAO.Services
 
                         if (existingInvId != null)
                         {
-                            // ПРЕДМЕТ ЕСТЬ: Просто увеличиваем количество (Стакаем)
                             string updateInvSql = "UPDATE market_orders SET amount = amount + @qty WHERE id = @invId";
                             using (var cmd = new MySqlCommand(updateInvSql, connection, transaction))
                             {
@@ -111,7 +103,6 @@ namespace MarketAO.Services
                         }
                         else
                         {
-                            // ПРЕДМЕТА НЕТ: Создаем новую запись в инвентаре
                             string insertInvSql = @"INSERT INTO market_orders (item_id, city, price, amount, order_type) 
                                             VALUES (@itemId, @city, @price, @qty, 'sell')";
                             using (var cmd = new MySqlCommand(insertInvSql, connection, transaction))
@@ -138,7 +129,7 @@ namespace MarketAO.Services
 
         public void SellItem(MarketItem item, int quantity)
         {
-            long profit = (long)((item.Price * quantity) * 0.90); // Сразу чистая прибыль (минус 10% налог)
+            long profit = (long)((item.Price * quantity) * 0.90);
             BalanceService.Instance.Add(profit);
 
             using (var connection = new MySqlConnection(_connectionString))

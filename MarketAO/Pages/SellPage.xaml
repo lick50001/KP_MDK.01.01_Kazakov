@@ -63,16 +63,13 @@
                            VerticalAlignment="Center"
                            Foreground="{StaticResource AlbionGoldBrush}" FontWeight="Bold" FontSize="13"/>
 
-                <!-- Текст "Действие" удален, колонка пустая для выравнивания -->
             </Grid>
         </Border>
 
-        <!-- Список инвентаря -->
         <ListView x:Name="InventoryList" Grid.Row="2"
                   Background="Transparent" BorderThickness="0"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   ScrollViewer.VerticalScrollBarVisibility="Hidden">
-            <!-- Скролл скрыт, но работает -->
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,8">
@@ -91,12 +88,10 @@
                                        Foreground="#C0A060" FontSize="12" Margin="0,2,0,0"/>
                         </StackPanel>
 
-                        <!-- Количество -->
                         <TextBlock Grid.Column="1" Text="{Binding Quantity}"
                                    Foreground="#E8D8B5" FontSize="16" FontWeight="SemiBold"
                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                        <!-- Кнопка -->
                         <Button Grid.Column="2" Content="Продать"
                                 Tag="{Binding}" Click="SellButton_Click"
                                 Width="110" Height="34" HorizontalAlignment="Center" Cursor="Hand">

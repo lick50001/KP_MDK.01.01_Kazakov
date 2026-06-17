@@ -1,4 +1,4 @@
-﻿namespace MarketAO.Models // Проверь, чтобы namespace совпадал с твоим проектом
+﻿namespace MarketAO.Models
 {
     public class GameItem
     {

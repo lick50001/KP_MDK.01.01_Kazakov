@@ -9,13 +9,11 @@
 
     <Grid Margin="0,0,30,0" HorizontalAlignment="Left" Width="1470">
         <Grid.ColumnDefinitions>
-            <!-- Вернули исходную ширину колонки, чтобы правая часть не двигалась -->
             <ColumnDefinition Width="724"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
-            <!-- Плашка уменьшена до 650 и прижата влево. Логи стали уже, справа от них появился зазор -->
             <Border Width="650" HorizontalAlignment="Left" BorderBrush="#FF33FFFF" Margin="0 0 0 0" BorderThickness="0.42" Background="#1A1C24" CornerRadius="15">
                 <ScrollViewer VerticalScrollBarVisibility="Hidden">
                     <DockPanel Margin="30">
@@ -34,7 +32,6 @@
             </Border>
         </Grid>
 
-        <!-- Правая колонка теперь стоит идеально на своем старом месте -->
         <Grid Grid.Column="1">
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Margin="0 -228 0 0" HorizontalAlignment="Center">

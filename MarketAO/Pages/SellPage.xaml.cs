@@ -15,7 +15,6 @@ namespace MarketAO.Pages
             InitializeComponent();
             _cityName = cityName;
 
-            // ГАРАНТИЯ ОБНОВЛЕНИЯ ИНВЕНТАРЯ ПРИ ОТКРЫТИИ СТРАНИЦЫ
             this.Loaded += (s, e) => LoadInventory();
         }
 

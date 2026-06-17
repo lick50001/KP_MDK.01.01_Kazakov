@@ -13,7 +13,6 @@
         <SolidColorBrush x:Key="PanelBgBrush"      Color="#25201C"/>
         <SolidColorBrush x:Key="BorderDarkBrush"  Color="#4D3326"/>
 
-        <!-- Стиль строки списка -->
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -35,20 +34,14 @@
             </Setter>
         </Style>
 
-        <!-- Шаблон элемента (без времени, с улучшенной ценой) -->
         <DataTemplate x:Key="BuyItemTemplate">
             <Grid Margin="0,6">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75"/>
-                    <!-- Иконка -->
                     <ColumnDefinition Width="2.5*"/>
-                    <!-- Название -->
                     <ColumnDefinition Width="60"/>
-                    <!-- Тир -->
                     <ColumnDefinition Width="2*"/>
-                    <!-- Цена -->
                     <ColumnDefinition Width="130"/>
-                    <!-- Кнопка -->
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="1" Text="{Binding ItemName}"
@@ -61,7 +54,6 @@
                            Foreground="{StaticResource AlbionGoldBrush}"
                            FontWeight="Bold" FontSize="15"/>
 
-                <!-- Находишь этот блок в BuyPage.xaml -->
                 <StackPanel Grid.Column="3" Orientation="Horizontal" 
             HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
                     <TextBlock Text="{Binding Price, StringFormat={}{0:N0}}" 
@@ -102,7 +94,6 @@
         <TextBlock Text="Рынок: Купить" FontSize="24" Foreground="{StaticResource TextBrightBrush}"
                    FontWeight="Bold" Margin="0,0,0,14"/>
 
-        <!-- Панель фильтров -->
         <Border Grid.Row="1" Background="{StaticResource PanelBgBrush}" Padding="10" CornerRadius="6" Margin="0,0,0,10"
                 BorderBrush="{StaticResource BorderDarkBrush}" BorderThickness="1">
             <Grid>
@@ -132,7 +123,6 @@
             </Grid>
         </Border>
 
-        <!-- Шапка таблицы -->
         <Border Grid.Row="2" Background="#3A2E24" Height="30" CornerRadius="4" Margin="0,0,0,4">
             <Grid>
                 <Grid.ColumnDefinitions>
