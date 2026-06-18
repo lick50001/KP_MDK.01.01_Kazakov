@@ -4,17 +4,9 @@ using System.Threading.Tasks;
 
 namespace Kazakov_KP_01._01.Automation
 {
-    /// <summary>
-    /// Ввод текста с клавиатуры. Поддерживает два режима:
-    /// 1) SendInput — глобальная эмуляция клавиатуры через систему (работает,
-    ///    если окно реально в фокусе ОС).
-    /// 2) WM_CHAR через SendMessage — отправка сообщений прямо в хендл окна,
-    ///    минуя фокус ОС. Часто надёжнее для WPF/WinForms текстовых полей,
-    ///    которые могут игнорировать синтетический SendInput.
-    /// </summary>
     public static class KeyboardController
     {
-        #region SendInput (глобальный ввод)
+        #region SendInput
 
         [StructLayout(LayoutKind.Sequential)]
         private struct INPUT
@@ -42,27 +34,29 @@ namespace Kazakov_KP_01._01.Automation
         [DllImport("user32.dll", SetLastError = true)]
         private static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
         private const int INPUT_KEYBOARD = 1;
         private const uint KEYEVENTF_KEYUP = 0x0002;
         private const uint KEYEVENTF_UNICODE = 0x0004;
+        private const uint KEYEVENTF_SCANCODE = 0x0008;
 
         private const ushort VK_CONTROL = 0x11;
         private const ushort VK_A = 0x41;
         private const ushort VK_DELETE = 0x2E;
         private const ushort VK_BACK = 0x08;
+        private const ushort VK_RETURN = 0x0D;
 
         #endregion
 
-        #region SendMessage (прямой ввод в окно)
+        #region SendMessage
 
         [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
         private static extern IntPtr SendMessageW(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetFocus();
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr SetFocus(IntPtr hWnd);
+        [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
+        private static extern IntPtr SendMessageWText(IntPtr hWnd, uint Msg, IntPtr wParam, string lParam);
 
         [DllImport("user32.dll")]
         private static extern IntPtr WindowFromPoint(POINT p);
@@ -74,34 +68,16 @@ namespace Kazakov_KP_01._01.Automation
         private const uint WM_KEYDOWN = 0x0100;
         private const uint WM_KEYUP = 0x0101;
         private const uint WM_SETFOCUS = 0x0007;
+        private const uint WM_SETTEXT = 0x000C;
+
+        private const int VK_BACK_INT = 0x08;
+        private const int VK_RETURN_INT = 0x0D;
 
         #endregion
 
-        /// <summary>
-        /// Печатает текст через SendInput (глобальный ввод). Требует,
-        /// чтобы целевое окно реально было в фокусе ОС.
-        /// </summary>
-        public static async Task TypeTextAsync(string text, int delayBetweenCharsMs = 35)
-        {
-            var rng = new Random();
-
-            foreach (char c in text)
-            {
-                SendUnicodeChar(c);
-                await Task.Delay(delayBetweenCharsMs + rng.Next(-10, 15));
-            }
-        }
-
-        /// <summary>
-        /// Печатает текст напрямую в указанное окно через WM_CHAR,
-        /// минуя системный фокус. Используй это, если SendInput не работает
-        /// для конкретного текстового поля (частая ситуация с кастомными контролами).
-        /// </summary>
-        /// <param name="hWnd">Хендл окна или конкретного контрола, куда нужно ввести текст</param>
         public static async Task TypeTextDirectAsync(IntPtr hWnd, string text, int delayBetweenCharsMs = 35)
         {
-            var rng = new Random();
-
+            Random rng = new Random();
             foreach (char c in text)
             {
                 SendMessageW(hWnd, WM_CHAR, (IntPtr)c, IntPtr.Zero);
@@ -109,15 +85,43 @@ namespace Kazakov_KP_01._01.Automation
             }
         }
 
-        /// <summary>
-        /// Находит самый "глубокий" дочерний контрол окна в указанной экранной точке.
-        /// Полезно, чтобы получить хендл именно текстового поля (а не всего окна),
-        /// для точного WM_CHAR-ввода.
-        /// </summary>
+        public static async Task TypeTextAsync(string text, int delayBetweenCharsMs = 35)
+        {
+            Random rng = new Random();
+            foreach (char c in text)
+            {
+                SendUnicodeChar(c);
+                await Task.Delay(delayBetweenCharsMs + rng.Next(-10, 15));
+            }
+        }
+
         public static IntPtr GetControlAtScreenPoint(int screenX, int screenY)
         {
-            var point = new POINT { X = screenX, Y = screenY };
+            POINT point = new POINT { X = screenX, Y = screenY };
             return WindowFromPoint(point);
+        }
+
+        public static void SelectAllAndDeleteDirect(IntPtr hWnd)
+        {
+            SendMessageW(hWnd, WM_SETFOCUS, IntPtr.Zero, IntPtr.Zero);
+            System.Threading.Thread.Sleep(50);
+            KeyDown(VK_CONTROL);
+            KeyDown(VK_A);
+            KeyUp(VK_A);
+            KeyUp(VK_CONTROL);
+            System.Threading.Thread.Sleep(50);
+            KeyDown(VK_DELETE);
+            KeyUp(VK_DELETE);
+            System.Threading.Thread.Sleep(30);
+        }
+
+        public static void BackspaceDirect(IntPtr hWnd, int times)
+        {
+            for (int i = 0; i < times; i++)
+            {
+                SendMessageW(hWnd, WM_KEYDOWN, (IntPtr)VK_BACK_INT, IntPtr.Zero);
+                SendMessageW(hWnd, WM_KEYUP, (IntPtr)VK_BACK_INT, IntPtr.Zero);
+            }
         }
 
         public static void SelectAllAndDelete()
@@ -126,27 +130,8 @@ namespace Kazakov_KP_01._01.Automation
             KeyDown(VK_A);
             KeyUp(VK_A);
             KeyUp(VK_CONTROL);
-
             KeyDown(VK_DELETE);
             KeyUp(VK_DELETE);
-        }
-
-        /// <summary>
-        /// Очистка поля напрямую в хендл контрола через WM_KEYDOWN (Ctrl+A, Delete).
-        /// </summary>
-        public static void SelectAllAndDeleteDirect(IntPtr hWnd)
-        {
-            const int VK_A_INT = 0x41;
-            const int VK_DELETE_INT = 0x2E;
-            const int VK_CONTROL_INT = 0x11;
-
-            SendMessageW(hWnd, WM_KEYDOWN, (IntPtr)VK_CONTROL_INT, IntPtr.Zero);
-            SendMessageW(hWnd, WM_KEYDOWN, (IntPtr)VK_A_INT, IntPtr.Zero);
-            SendMessageW(hWnd, WM_KEYUP, (IntPtr)VK_A_INT, IntPtr.Zero);
-            SendMessageW(hWnd, WM_KEYUP, (IntPtr)VK_CONTROL_INT, IntPtr.Zero);
-
-            SendMessageW(hWnd, WM_KEYDOWN, (IntPtr)VK_DELETE_INT, IntPtr.Zero);
-            SendMessageW(hWnd, WM_KEYUP, (IntPtr)VK_DELETE_INT, IntPtr.Zero);
         }
 
         public static void ClearWithBackspace(int approximateLength)
@@ -158,33 +143,93 @@ namespace Kazakov_KP_01._01.Automation
             }
         }
 
+        public static void PressEnter()
+        {
+            KeyDown(VK_RETURN);
+            KeyUp(VK_RETURN);
+        }
+
+        public static void PressEnterDirect(IntPtr hWnd)
+        {
+            SendMessageW(hWnd, WM_KEYDOWN, (IntPtr)VK_RETURN_INT, IntPtr.Zero);
+            SendMessageW(hWnd, WM_KEYUP, (IntPtr)VK_RETURN_INT, IntPtr.Zero);
+        }
+
         private static void SendUnicodeChar(char c)
         {
-            var down = new INPUT
+            INPUT down = new INPUT
             {
                 type = INPUT_KEYBOARD,
-                U = new InputUnion { ki = new KEYBDINPUT { wVk = 0, wScan = c, dwFlags = KEYEVENTF_UNICODE, time = 0, dwExtraInfo = IntPtr.Zero } }
+                U = new InputUnion
+                {
+                    ki = new KEYBDINPUT
+                    {
+                        wVk = 0,
+                        wScan = c,
+                        dwFlags = KEYEVENTF_UNICODE,
+                        time = 0,
+                        dwExtraInfo = IntPtr.Zero
+                    }
+                }
             };
 
-            var up = new INPUT
+            INPUT up = new INPUT
             {
                 type = INPUT_KEYBOARD,
-                U = new InputUnion { ki = new KEYBDINPUT { wVk = 0, wScan = c, dwFlags = KEYEVENTF_UNICODE | KEYEVENTF_KEYUP, time = 0, dwExtraInfo = IntPtr.Zero } }
+                U = new InputUnion
+                {
+                    ki = new KEYBDINPUT
+                    {
+                        wVk = 0,
+                        wScan = c,
+                        dwFlags = KEYEVENTF_UNICODE | KEYEVENTF_KEYUP,
+                        time = 0,
+                        dwExtraInfo = IntPtr.Zero
+                    }
+                }
             };
 
             SendInput(1, new[] { down }, Marshal.SizeOf(typeof(INPUT)));
             SendInput(1, new[] { up }, Marshal.SizeOf(typeof(INPUT)));
         }
 
-        private static void KeyDown(ushort vk)
+        public static void KeyDown(ushort vk)
         {
-            var input = new INPUT { type = INPUT_KEYBOARD, U = new InputUnion { ki = new KEYBDINPUT { wVk = vk, wScan = 0, dwFlags = 0, time = 0, dwExtraInfo = IntPtr.Zero } } };
+            INPUT input = new INPUT
+            {
+                type = INPUT_KEYBOARD,
+                U = new InputUnion
+                {
+                    ki = new KEYBDINPUT
+                    {
+                        wVk = vk,
+                        wScan = 0,
+                        dwFlags = 0,
+                        time = 0,
+                        dwExtraInfo = IntPtr.Zero
+                    }
+                }
+            };
             SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
         }
 
-        private static void KeyUp(ushort vk)
+        public static void KeyUp(ushort vk)
         {
-            var input = new INPUT { type = INPUT_KEYBOARD, U = new InputUnion { ki = new KEYBDINPUT { wVk = vk, wScan = 0, dwFlags = KEYEVENTF_KEYUP, time = 0, dwExtraInfo = IntPtr.Zero } } };
+            INPUT input = new INPUT
+            {
+                type = INPUT_KEYBOARD,
+                U = new InputUnion
+                {
+                    ki = new KEYBDINPUT
+                    {
+                        wVk = vk,
+                        wScan = 0,
+                        dwFlags = KEYEVENTF_KEYUP,
+                        time = 0,
+                        dwExtraInfo = IntPtr.Zero
+                    }
+                }
+            };
             SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
         }
     }

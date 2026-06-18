@@ -85,6 +85,7 @@
     <Compile Include="Automation\ImagePreprocessor.cs" />
     <Compile Include="Automation\KeyboardController.cs" />
     <Compile Include="Automation\MarketBuyBot.cs" />
+    <Compile Include="Automation\MarketSellBot.cs" />
     <Compile Include="Automation\MarketWindow.cs" />
     <Compile Include="Automation\MouseController.cs" />
     <Compile Include="Automation\OcrReader.cs" />

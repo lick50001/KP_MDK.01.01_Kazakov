@@ -16,14 +16,8 @@ namespace Kazakov_KP_01._01.Classes
     {
         public static FinanceSummary Calculate(List<Finance> records)
         {
-            var now = DateTime.Now;
-            var sessionStart = SessionManager.SessionStartTime;
-
-            System.Diagnostics.Debug.WriteLine($"=== DEBUG ===");
-            System.Diagnostics.Debug.WriteLine($"Now: {now}");
-            System.Diagnostics.Debug.WriteLine($"SessionStart: {sessionStart}");
-            foreach (var r in records)
-                System.Diagnostics.Debug.WriteLine($"Record: EventTime={r.EventTime}, Amount={r.Amount}, >= session? {r.EventTime >= sessionStart}");
+            DateTime now = DateTime.UtcNow;
+            DateTime sessionStart = SessionManager.SessionStartTime;
 
             decimal total = records.Sum(f => f.Amount);
 
@@ -35,24 +29,23 @@ namespace Kazakov_KP_01._01.Classes
                 .Where(f => f.EventTime >= sessionStart)
                 .Sum(f => f.Amount);
 
-            return new FinanceSummary
-            {
-                TotalProfit = total,
-                Profit24h = last24h,
-                ProfitSession = session
-            };
+            FinanceSummary summary = new FinanceSummary();
+            summary.TotalProfit = total;
+            summary.Profit24h = last24h;
+            summary.ProfitSession = session;
+            return summary;
         }
 
         public static string FormatMoney(decimal amount)
         {
             string sign = amount >= 0 ? "+" : "-";
             decimal abs = Math.Abs(amount);
-            return $"{sign}${abs:N0}";
+            return sign + "$" + abs.ToString("N0");
         }
 
         public static string FormatMoneyPlain(decimal amount)
         {
-            return $"${amount:N0}";
+            return "$" + amount.ToString("N0");
         }
     }
 }

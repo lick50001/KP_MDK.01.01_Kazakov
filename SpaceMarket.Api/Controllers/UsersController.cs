@@ -148,5 +148,37 @@ namespace SpaceMarket.Api.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+
+        [HttpGet("GetBalance")]
+        public async Task<IActionResult> GetBalance([FromQuery] string token)
+        {
+            var principal = JwtToken.ValidateToken(token);
+            if (principal == null) return Unauthorized("Неверный токен");
+
+            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdClaim?.Value, out int userId)) return BadRequest();
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            return Ok(new { balance = user.CurrentBalance });
+        }
+
+        [HttpPut("SetBalance")]
+        public async Task<IActionResult> SetBalance([FromQuery] string token, [FromForm] decimal balance)
+        {
+            var principal = JwtToken.ValidateToken(token);
+            if (principal == null) return Unauthorized("Неверный токен");
+
+            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdClaim?.Value, out int userId)) return BadRequest();
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            user.CurrentBalance = balance;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

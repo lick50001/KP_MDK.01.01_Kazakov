@@ -13,6 +13,7 @@ namespace SpaceMarket.Api.Models
         public List<Items> Items { get; set; } = new();
         public List<Logs> Logs { get; set; } = new();
         public List<Finance> Finances { get; set; } = new();
+        public decimal CurrentBalance { get; set; } = 5000000;
 
         public Users() { }
 

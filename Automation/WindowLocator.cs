@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -8,8 +9,8 @@ using System.Text;
 namespace Kazakov_KP_01._01.Automation
 {
     /// <summary>
-    /// Находит окно целевого приложения (MarketAO) по заголовку или процессу
-    /// и предоставляет его текущие экранные координаты.
+    /// Находит окно целевого приложения (MarketAO) по заголовку, процессу
+    /// или размеру и предоставляет его текущие экранные координаты.
     /// </summary>
     public static class WindowLocator
     {
@@ -46,6 +47,18 @@ namespace Kazakov_KP_01._01.Automation
         [DllImport("user32.dll")]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("kernel32.dll")]
+        private static extern uint GetCurrentThreadId();
+
+        [DllImport("user32.dll")]
+        private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+
+        [DllImport("user32.dll")]
+        private static extern bool BringWindowToTop(IntPtr hWnd);
+
         private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
         private const int SW_RESTORE = 9;
@@ -61,7 +74,7 @@ namespace Kazakov_KP_01._01.Automation
         /// </summary>
         public static IntPtr FindByProcessName(string processName)
         {
-            var proc = Process.GetProcessesByName(processName).FirstOrDefault();
+            Process proc = Process.GetProcessesByName(processName).FirstOrDefault();
             if (proc == null) return IntPtr.Zero;
 
             proc.Refresh();
@@ -69,11 +82,11 @@ namespace Kazakov_KP_01._01.Automation
         }
 
         /// <summary>
-        /// Находит окно по точному заголовку (title) через Process.MainWindowTitle.
+        /// Находит окно по точному заголовку через Process.MainWindowTitle.
         /// </summary>
         public static IntPtr FindByTitle(string titleContains)
         {
-            foreach (var proc in Process.GetProcesses())
+            foreach (Process proc in Process.GetProcesses())
             {
                 if (proc.MainWindowHandle != IntPtr.Zero &&
                     !string.IsNullOrEmpty(proc.MainWindowTitle) &&
@@ -86,9 +99,7 @@ namespace Kazakov_KP_01._01.Automation
         }
 
         /// <summary>
-        /// Более надёжный поиск — перечисляет ВСЕ окна системы (не только
-        /// MainWindowHandle процессов), ищет по заголовку. Находит окна,
-        /// которые Process.MainWindowHandle не видит.
+        /// Более надёжный поиск — перечисляет ВСЕ окна системы по заголовку.
         /// </summary>
         public static IntPtr FindByTitleEnum(string titleContains)
         {
@@ -98,7 +109,7 @@ namespace Kazakov_KP_01._01.Automation
             {
                 if (!IsWindowVisible(hWnd)) return true;
 
-                var sb = new StringBuilder(256);
+                StringBuilder sb = new StringBuilder(256);
                 GetWindowText(hWnd, sb, 256);
                 string title = sb.ToString();
 
@@ -115,25 +126,110 @@ namespace Kazakov_KP_01._01.Automation
         }
 
         /// <summary>
-        /// Диагностика: возвращает список всех видимых окон в системе с их
-        /// заголовками и PID процесса-владельца. Используй для поиска точного
-        /// заголовка/процесса MarketAO, если обычный поиск не срабатывает.
+        /// Находит окно процесса с заданным точным размером клиентской области.
+        /// Полезно для окон без видимого заголовка (WindowStyle="None"),
+        /// у которых GetWindowText не возвращает осмысленное значение,
+        /// но размер задан в XAML и известен заранее.
         /// </summary>
-        public static string ListAllVisibleWindows()
+        public static IntPtr FindByProcessAndSize(string processName, int expectedWidth, int expectedHeight, int tolerance = 5)
         {
-            var sb = new StringBuilder();
+            IntPtr found = IntPtr.Zero;
 
             EnumWindows((hWnd, lParam) =>
             {
                 if (!IsWindowVisible(hWnd)) return true;
 
-                var titleBuilder = new StringBuilder(256);
+                uint pid;
+                GetWindowThreadProcessId(hWnd, out pid);
+
+                string procName = "";
+                try
+                {
+                    procName = Process.GetProcessById((int)pid).ProcessName;
+                }
+                catch
+                {
+                    return true;
+                }
+
+                if (!string.Equals(procName, processName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                RECT rect;
+                if (!GetClientRect(hWnd, out rect)) return true;
+
+                int width = rect.Right - rect.Left;
+                int height = rect.Bottom - rect.Top;
+
+                bool widthMatch = Math.Abs(width - expectedWidth) <= tolerance;
+                bool heightMatch = Math.Abs(height - expectedHeight) <= tolerance;
+
+                if (widthMatch && heightMatch)
+                {
+                    found = hWnd;
+                    return false;
+                }
+
+                return true;
+            }, IntPtr.Zero);
+
+            return found;
+        }
+
+        /// <summary>
+        /// Находит ВСЕ видимые окна заданного процесса.
+        /// </summary>
+        public static List<IntPtr> FindAllByProcessName(string processName)
+        {
+            List<IntPtr> result = new List<IntPtr>();
+
+            EnumWindows((hWnd, lParam) =>
+            {
+                if (!IsWindowVisible(hWnd)) return true;
+
+                uint pid;
+                GetWindowThreadProcessId(hWnd, out pid);
+
+                string procName = "";
+                try
+                {
+                    procName = Process.GetProcessById((int)pid).ProcessName;
+                }
+                catch
+                {
+                    return true;
+                }
+
+                if (string.Equals(procName, processName, StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(hWnd);
+                }
+
+                return true;
+            }, IntPtr.Zero);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Диагностика: возвращает список всех видимых окон в системе.
+        /// </summary>
+        public static string ListAllVisibleWindows()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            EnumWindows((hWnd, lParam) =>
+            {
+                if (!IsWindowVisible(hWnd)) return true;
+
+                StringBuilder titleBuilder = new StringBuilder(256);
                 GetWindowText(hWnd, titleBuilder, 256);
                 string title = titleBuilder.ToString();
 
                 if (!string.IsNullOrWhiteSpace(title))
                 {
-                    GetWindowThreadProcessId(hWnd, out uint pid);
+                    uint pid;
+                    GetWindowThreadProcessId(hWnd, out pid);
                     string procName = "?";
                     try
                     {
@@ -141,7 +237,14 @@ namespace Kazakov_KP_01._01.Automation
                     }
                     catch { }
 
-                    sb.AppendLine($"Процесс: '{procName}' (PID {pid})  |  Заголовок: '{title}'");
+                    RECT rect;
+                    string sizeInfo = "?";
+                    if (GetClientRect(hWnd, out rect))
+                    {
+                        sizeInfo = (rect.Right - rect.Left) + "x" + (rect.Bottom - rect.Top);
+                    }
+
+                    sb.AppendLine("Процесс: '" + procName + "' (PID " + pid + ")  |  Заголовок: '" + title + "'  |  Размер: " + sizeInfo);
                 }
 
                 return true;
@@ -160,22 +263,23 @@ namespace Kazakov_KP_01._01.Automation
         /// </summary>
         public static Rectangle GetWindowBounds(IntPtr hWnd)
         {
-            if (!GetWindowRect(hWnd, out var rect))
+            RECT rect;
+            if (!GetWindowRect(hWnd, out rect))
                 throw new InvalidOperationException("Не удалось получить координаты окна. Возможно, окно закрыто.");
 
             return new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
         }
 
         /// <summary>
-        /// Возвращает экранные координаты КЛИЕНТСКОЙ области окна
-        /// (без рамки, заголовка и системного меню).
+        /// Возвращает экранные координаты КЛИЕНТСКОЙ области окна.
         /// </summary>
         public static Rectangle GetClientBounds(IntPtr hWnd)
         {
-            if (!GetClientRect(hWnd, out var clientRect))
+            RECT clientRect;
+            if (!GetClientRect(hWnd, out clientRect))
                 throw new InvalidOperationException("Не удалось получить клиентскую область окна.");
 
-            var topLeft = new POINT { X = 0, Y = 0 };
+            POINT topLeft = new POINT { X = 0, Y = 0 };
             ClientToScreen(hWnd, ref topLeft);
 
             return new Rectangle(
@@ -187,14 +291,33 @@ namespace Kazakov_KP_01._01.Automation
         }
 
         /// <summary>
-        /// Разворачивает окно если оно свёрнуто и выводит на передний план.
+        /// Разворачивает окно если оно свёрнуто и выводит на передний план,
+        /// обходя защиту Windows от "захвата фокуса" чужими процессами.
         /// </summary>
         public static void RestoreAndFocus(IntPtr hWnd)
         {
             if (IsIconic(hWnd))
                 ShowWindow(hWnd, SW_RESTORE);
 
+            IntPtr foreground = GetForegroundWindow();
+            uint foregroundThreadId = GetWindowThreadProcessId(foreground, out _);
+            uint targetThreadId = GetWindowThreadProcessId(hWnd, out _);
+            uint currentThreadId = GetCurrentThreadId();
+
+            bool attached = false;
+
+            if (foregroundThreadId != targetThreadId)
+            {
+                attached = AttachThreadInput(currentThreadId, targetThreadId, true);
+            }
+
+            BringWindowToTop(hWnd);
             SetForegroundWindow(hWnd);
+
+            if (attached)
+            {
+                AttachThreadInput(currentThreadId, targetThreadId, false);
+            }
         }
 
         /// <summary>
@@ -202,7 +325,7 @@ namespace Kazakov_KP_01._01.Automation
         /// </summary>
         public static Point WindowToScreen(IntPtr hWnd, int relativeX, int relativeY)
         {
-            var clientBounds = GetClientBounds(hWnd);
+            Rectangle clientBounds = GetClientBounds(hWnd);
             return new Point(clientBounds.X + relativeX, clientBounds.Y + relativeY);
         }
 
@@ -211,7 +334,7 @@ namespace Kazakov_KP_01._01.Automation
         /// </summary>
         public static Rectangle WindowToScreen(IntPtr hWnd, Rectangle relativeRegion)
         {
-            var clientBounds = GetClientBounds(hWnd);
+            Rectangle clientBounds = GetClientBounds(hWnd);
             return new Rectangle(
                 clientBounds.X + relativeRegion.X,
                 clientBounds.Y + relativeRegion.Y,

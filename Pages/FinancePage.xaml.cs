@@ -34,7 +34,7 @@ namespace Kazakov_KP_01._01.Pages
                 var finRow = new Kazakov_KP_01._01.Elements.FinanceLog();
 
                 finRow.SetData(
-                    fin.EventTime.ToString("HH:mm"),
+                    fin.EventTime.ToLocalTime().ToString("HH:mm"),
                     $"{fin.Message}  ({FinanceCalculator.FormatMoney(fin.Amount)})",
                     fin.FinanceType
                 );

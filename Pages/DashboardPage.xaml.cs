@@ -58,7 +58,7 @@ namespace Kazakov_KP_01._01.Pages
             {
                 var logRow = new Kazakov_KP_01._01.Elements.Log();
                 logRow.SetData(
-                    log.EventTime.ToString("HH:mm"),
+                    log.EventTime.ToLocalTime().ToString("HH:mm"),
                     log.Message,
                     log.LogType
                 );

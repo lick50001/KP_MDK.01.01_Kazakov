@@ -7,33 +7,41 @@ using System.Threading.Tasks;
 
 namespace Kazakov_KP_01._01.Automation
 {
-    /// <summary>
-    /// Бот авто-скупки предметов на MarketAO.
-    /// Алгоритм на один предмет:
-    /// 1) кликает в поле поиска и вводит название предмета,
-    /// 2) распознаёт цену OCR в заданной области,
-    /// 3) если цена меньше MaxBuyPrice — кликает по кнопке покупки,
-    /// 4) логирует каждый шаг: перемещения/OCR — в Logs (Главная),
-    ///    покупку/продажу — в Finance (Финансы).
-    /// </summary>
     public class MarketBuyBot
     {
         private readonly AutomationContext _ctx;
         private readonly ApiService _api;
 
-        // Поле ввода названия предмета (относительно окна MarketAO)
         private const int SearchFieldX = 232;
         private const int SearchFieldY = 172;
 
-        public const int SearchFieldXPublic = SearchFieldX;
-        public const int SearchFieldYPublic = SearchFieldY;
-
-        // Область, где отображается цена предмета после поиска (относительно окна MarketAO)
         private static readonly Rectangle PriceRegion = new Rectangle(535, 247, 642 - 535, 280 - 247);
 
-        // Точка кнопки "Купить" (относительно окна MarketAO)
         private const int BuyButtonX = 735;
         private const int BuyButtonY = 260;
+
+        // Исправлена координата кнопки переключения на продажу
+        private const int SellTabX = 898;
+        private const int SellTabY = 206;
+
+        private static readonly Rectangle BalanceRegion = new Rectangle(593, 24, 748 - 593, 53 - 24);
+
+        private const int DealWindowWidth = 850;
+        private const int DealWindowHeight = 450;
+
+        private const int DealQuantityFieldX = 253;
+        private const int DealQuantityFieldY = 223;
+
+        private static readonly Rectangle DealPriceRegion = new Rectangle(235, 168, 325 - 235, 190 - 168);
+
+        private const int DealConfirmX = 265;
+        private const int DealConfirmY = 412;
+
+        private const int DealCancelX = 103;
+        private const int DealCancelY = 415;
+
+        private const int ErrorOkButtonScreenX = 1090;
+        private const int ErrorOkButtonScreenY = 600;
 
         public MarketBuyBot(AutomationContext ctx)
         {
@@ -41,66 +49,14 @@ namespace Kazakov_KP_01._01.Automation
             _api = new ApiService();
         }
 
-        /// <summary>
-        /// Обрабатывает один предмет: вводит название в поле поиска, читает цену,
-        /// покупает если цена выгодная. Возвращает true, если покупка состоялась.
-        /// </summary>
-        public async Task<bool> ProcessItemAsync(Items item)
-        {
-            if (!_ctx.Market.IsAlive)
-            {
-                await LogAsync("error", "Окно MarketAO закрыто, обработка остановлена");
-                return false;
-            }
-
-            // Шаг 1 — кликаем в поле поиска и вводим название предмета
-            await LogAsync("info", $"Ищу предмет: {item.ItemName}");
-            await MouseController.ClickInWindowAsync(_ctx.Market, SearchFieldX, SearchFieldY);
-            await Task.Delay(150, _ctx.Token);
-            await ClearAndTypeAsync(item.ItemName);
-
-            // Пауза, чтобы маркет успел отрисовать результат поиска
-            await Task.Delay(800, _ctx.Token);
-
-            // Шаг 2 — распознаём цену через OCR
-            decimal? price = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, PriceRegion);
-
-            if (!price.HasValue)
-            {
-                await LogAsync("warning", $"Не удалось распознать цену для '{item.ItemName}'");
-                return false;
-            }
-
-            await LogAsync("info", $"Цена '{item.ItemName}': {price.Value:N0} (макс: {item.MaxBuyPrice:N0})");
-
-            // Шаг 3 — сравниваем с MaxBuyPrice
-            if (price.Value >= item.MaxBuyPrice)
-            {
-                await LogAsync("info", $"Цена не подходит для '{item.ItemName}', пропускаю");
-                return false;
-            }
-
-            // Шаг 4 — цена выгодная, кликаем "Купить"
-            await LogAsync("info", $"Цена выгодная, покупаю '{item.ItemName}'");
-            await MouseController.ClickInWindowAsync(_ctx.Market, BuyButtonX, BuyButtonY);
-
-            // Покупка идёт в финансовые логи как расход (отрицательная сумма)
-            await _api.AddFinanceLogAsync("Покупка", $"Куплен предмет: {item.ItemName}", -price.Value);
-
-            await LogAsync("success", $"Куплен '{item.ItemName}' за {price.Value:N0}");
-
-            return true;
-        }
-
-        /// <summary>
-        /// Проходит по всем активным предметам из списка и пытается купить каждый,
-        /// если цена окажется выгодной.
-        /// </summary>
         public async Task RunFullCycleAsync(List<Items> items)
         {
-            foreach (var item in items)
+            await LogAsync("info", "Запуск цикла авто-скупки");
+
+            foreach (Items item in items)
             {
                 if (_ctx.Token.IsCancellationRequested) break;
+
                 if (!_ctx.Market.IsAlive)
                 {
                     await LogAsync("error", "Окно MarketAO закрыто во время цикла, остановка");
@@ -109,44 +65,262 @@ namespace Kazakov_KP_01._01.Automation
 
                 if (!item.IsActive) continue;
 
-                await ProcessItemAsync(item);
+                bool stopCycle = await ProcessItemAsync(item);
+
+                if (stopCycle)
+                {
+                    await LogAsync("info", "Сигнал остановки цикла покупки получен");
+                    break;
+                }
 
                 await Task.Delay(1200, _ctx.Token);
             }
 
-            await LogAsync("success", "Цикл авто-скупки завершён");
+            // Всегда переключаемся на продажу по завершении цикла покупки
+            await HandleSwitchToSellAsync();
+        }
+
+        private async Task<bool> ProcessItemAsync(Items item)
+        {
+            await LogAsync("info", "Ищу предмет: " + item.ItemName);
+            bool searchOk = await ClearAndTypeInWindowAsync(_ctx.Market, SearchFieldX, SearchFieldY, item.ItemName);
+
+            if (!searchOk)
+            {
+                await LogAsync("warning", "Не удалось ввести название предмета: " + item.ItemName);
+                return false;
+            }
+
+            await Task.Delay(800, _ctx.Token);
+
+            decimal? price = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, PriceRegion);
+
+            if (!price.HasValue)
+            {
+                await LogAsync("warning", "Не удалось распознать цену для '" + item.ItemName + "'");
+                return false;
+            }
+
+            await LogAsync("info", "Цена '" + item.ItemName + "': " + price.Value.ToString("N0") + " (макс: " + item.MaxBuyPrice.ToString("N0") + ")");
+
+            if (price.Value >= item.MaxBuyPrice)
+            {
+                await LogAsync("info", "Цена не подходит для '" + item.ItemName + "', пропускаю");
+                return false;
+            }
+
+            // Проверяем баланс ДО открытия окна сделки
+            decimal? balanceBefore = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, BalanceRegion);
+
+            if (!balanceBefore.HasValue || balanceBefore.Value <= 0)
+            {
+                await LogAsync("warning", "Не удалось распознать баланс перед покупкой '" + item.ItemName + "'");
+                return false;
+            }
+
+            if (balanceBefore.Value < price.Value)
+            {
+                await LogAsync("warning", "Баланса (" + balanceBefore.Value.ToString("N0") + ") не хватает даже на 1 шт '" + item.ItemName + "' по цене " + price.Value.ToString("N0"));
+                return true; // сигнал завершить цикл — денег нет
+            }
+
+            await LogAsync("info", "Цена выгодная, открываю окно покупки '" + item.ItemName + "'");
+            await MouseController.ClickInWindowAsync(_ctx.Market, BuyButtonX, BuyButtonY);
+            await Task.Delay(1000, _ctx.Token);
+
+            MarketWindow dealWindow = null;
+            int attempts = 0;
+
+            while (dealWindow == null && attempts < 6)
+            {
+                try
+                {
+                    dealWindow = MarketWindow.FindBySize("MarketAO", DealWindowWidth, DealWindowHeight, 8);
+                    await LogAsync("success", "Окно сделки найдено, хендл: " + dealWindow.Handle.ToString());
+                }
+                catch (Exception ex)
+                {
+                    attempts++;
+                    await LogAsync("warning", "Попытка " + attempts + ": окно сделки не найдено (" + ex.Message + ")");
+                    await Task.Delay(400, _ctx.Token);
+                }
+            }
+
+            if (dealWindow == null)
+            {
+                await LogAsync("error", "Окно сделки так и не найдено для '" + item.ItemName + "'");
+                return false;
+            }
+
+            OcrResult rawDealPriceResult = _ctx.Ocr.ReadRegionInWindow(dealWindow, DealPriceRegion, false);
+            await LogAsync("info", "OCR сырой текст цены в сделке: '" + rawDealPriceResult.Text + "' (conf: " + rawDealPriceResult.Confidence.ToString("F1") + "%)");
+
+            decimal? unitPrice = _ctx.Ocr.ReadNumberAdaptiveInWindow(dealWindow, DealPriceRegion);
+
+            if (!unitPrice.HasValue || unitPrice.Value <= 0)
+            {
+                await LogAsync("warning", "Не удалось распознать цену в окне сделки для '" + item.ItemName + "'");
+                return false;
+            }
+
+            await LogAsync("info", "Цена в окне сделки распознана: " + unitPrice.Value.ToString("N0"));
+
+            decimal? balance = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, BalanceRegion);
+
+            if (!balance.HasValue || balance.Value <= 0)
+            {
+                await LogAsync("warning", "Не удалось распознать баланс аккаунта");
+                return false;
+            }
+
+            int desiredQuantity = (int)Math.Floor(balance.Value / unitPrice.Value);
+
+            if (desiredQuantity <= 0)
+            {
+                await LogAsync("warning", "Баланса не хватает даже на 1 единицу '" + item.ItemName + "'");
+
+                // Закрываем окно сделки и завершаем цикл
+                await MouseController.ClickInWindowAsync(dealWindow, DealCancelX, DealCancelY);
+                await Task.Delay(400, _ctx.Token);
+                return true;
+            }
+
+            if (desiredQuantity > 999)
+            {
+                await LogAsync("warning", "Подозрительно большое количество (" + desiredQuantity + "), возможна ошибка OCR цены. Пропускаю предмет.");
+
+                await MouseController.ClickInWindowAsync(dealWindow, DealCancelX, DealCancelY);
+                await Task.Delay(400, _ctx.Token);
+                return false;
+            }
+
+            await LogAsync("info", "Баланс: " + balance.Value.ToString("N0") + ", цена/шт: " + unitPrice.Value.ToString("N0") + ", хочу купить: " + desiredQuantity);
+
+            bool qtyOk = await ClearAndTypeInWindowAsync(dealWindow, DealQuantityFieldX, DealQuantityFieldY, desiredQuantity.ToString());
+
+            if (!qtyOk)
+            {
+                await LogAsync("warning", "Не удалось ввести количество для '" + item.ItemName + "'");
+                return false;
+            }
+
+            await Task.Delay(400, _ctx.Token);
+
+            // Считаем сумму по желаемому количеству (не по OCR после ввода,
+            // так как OCR поля количества давал неверные значения "41")
+            decimal totalToPay = unitPrice.Value * desiredQuantity;
+
+            await MouseController.ClickInWindowAsync(dealWindow, DealConfirmX, DealConfirmY);
+            await Task.Delay(700, _ctx.Token);
+
+            bool hasError = await CheckAndDismissErrorAsync();
+
+            if (hasError)
+            {
+                await LogAsync("warning", "Ошибка при покупке '" + item.ItemName + "' (нет товара или баланса)");
+                await Task.Delay(300, _ctx.Token);
+
+                // Пробуем закрыть окно сделки если оно ещё открыто
+                try
+                {
+                    MarketWindow dealWindowCheck = MarketWindow.FindBySize("MarketAO", DealWindowWidth, DealWindowHeight, 8);
+                    await MouseController.ClickInWindowAsync(dealWindowCheck, DealCancelX, DealCancelY);
+                    await Task.Delay(400, _ctx.Token);
+                }
+                catch { }
+
+                return true; // сигнал завершить цикл
+            }
+
+            await _api.AddFinanceLogAsync("Покупка", "Куплен предмет: " + item.ItemName + " x" + desiredQuantity, -totalToPay);
+            await LogAsync("success", "Куплен '" + item.ItemName + "' x" + desiredQuantity + " за " + totalToPay.ToString("N0"));
+
+            // Синхронизируем баланс с API после покупки
+            decimal? newBalance = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, BalanceRegion);
+            if (newBalance.HasValue)
+            {
+                await _api.SetBalanceAsync(newBalance.Value);
+            }
+
+            return false;
+        }
+
+        private async Task<bool> CheckAndDismissErrorAsync()
+        {
+            IntPtr errorHandle = IntPtr.Zero;
+
+            try
+            {
+                errorHandle = WindowLocator.FindByTitleEnum("Внимание");
+                if (errorHandle == IntPtr.Zero)
+                    errorHandle = WindowLocator.FindByTitleEnum("Ошибка");
+            }
+            catch (Exception)
+            {
+                errorHandle = IntPtr.Zero;
+            }
+
+            if (errorHandle == IntPtr.Zero)
+                return false;
+
+            await LogAsync("info", "Найдено окно ошибки, хендл: " + errorHandle.ToString());
+
+            WindowLocator.RestoreAndFocus(errorHandle);
+            await Task.Delay(200, _ctx.Token);
+
+            await MouseController.ClickAtAsync(ErrorOkButtonScreenX, ErrorOkButtonScreenY);
+            await Task.Delay(300, _ctx.Token);
+
+            return true;
         }
 
         /// <summary>
-        /// Очищает поле ввода (Ctrl+A, Delete) и вводит текст посимвольно.
+        /// Переключается на вкладку продажи и запускает цикл продажи.
+        /// Вызывается всегда по завершении цикла покупки.
         /// </summary>
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
-
-        // В ClearAndTypeAsync, для теста:
-        private async Task ClearAndTypeAsync(string text)
+        private async Task HandleSwitchToSellAsync()
         {
-            _ctx.Market.Activate();
-            await Task.Delay(200, _ctx.Token);
+            await LogAsync("info", "Переключаюсь на вкладку продажи");
+            await MouseController.ClickInWindowAsync(_ctx.Market, SellTabX, SellTabY);
+            await Task.Delay(800, _ctx.Token);
 
-            var screenPoint = _ctx.Market.ToScreen(SearchFieldX, SearchFieldY);
+            MarketSellBot sellBot = new MarketSellBot(_ctx);
+            await sellBot.RunFullSellCycleAsync();
+        }
 
-            // Кликаем мышью, чтобы поставить курсор/выделение в поле
-            await MouseController.ClickAtAsync(screenPoint.X, screenPoint.Y);
-            await Task.Delay(200, _ctx.Token);
+        private async Task<bool> ClearAndTypeInWindowAsync(MarketWindow window, int relativeX, int relativeY, string text)
+        {
+            try
+            {
+                window.Activate();
+                await Task.Delay(200, _ctx.Token);
 
-            // Находим хендл конкретного контрола под курсором (не всего окна)
-            IntPtr controlHandle = KeyboardController.GetControlAtScreenPoint(screenPoint.X, screenPoint.Y);
+                Point screenPoint = window.ToScreen(relativeX, relativeY);
 
-            if (controlHandle == IntPtr.Zero)
-                controlHandle = _ctx.Market.Handle; // fallback на хендл всего окна
+                await MouseController.ClickAtAsync(screenPoint.X, screenPoint.Y);
+                await Task.Delay(100, _ctx.Token);
+                await MouseController.ClickAtAsync(screenPoint.X, screenPoint.Y);
+                await Task.Delay(150, _ctx.Token);
 
-            // Очищаем поле прямым вводом в найденный контрол
-            KeyboardController.SelectAllAndDeleteDirect(controlHandle);
-            await Task.Delay(150, _ctx.Token);
+                IntPtr controlHandle = KeyboardController.GetControlAtScreenPoint(screenPoint.X, screenPoint.Y);
+                if (controlHandle == IntPtr.Zero)
+                    controlHandle = window.Handle;
 
-            // Печатаем напрямую в контрол через WM_CHAR — обходит проблему с фокусом
-            await KeyboardController.TypeTextDirectAsync(controlHandle, text, delayBetweenCharsMs: 50);
+                KeyboardController.SelectAllAndDeleteDirect(controlHandle);
+                await Task.Delay(150, _ctx.Token);
+
+                KeyboardController.BackspaceDirect(controlHandle, 10);
+                await Task.Delay(150, _ctx.Token);
+
+                await KeyboardController.TypeTextDirectAsync(controlHandle, text, 60);
+                await Task.Delay(200, _ctx.Token);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private async Task LogAsync(string type, string message)

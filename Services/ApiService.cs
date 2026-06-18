@@ -18,6 +18,7 @@ namespace Kazakov_KP_01._01.Services
         };
 
         // ЛОГИН || РЕГИСТРАЦИЯ
+
         public async Task<string> LoginAsync(string username, string password)
         {
             var content = new MultipartFormDataContent();
@@ -33,7 +34,7 @@ namespace Kazakov_KP_01._01.Services
                 SessionManager.Token = data.token;
                 SessionManager.UserName = data.userName;
                 SessionManager.CurrentRole = data.levelRoot;
-                SessionManager.SessionStartTime = DateTime.Now;
+                SessionManager.SessionStartTime = DateTime.UtcNow;
 
                 return data.token;
             }
@@ -75,7 +76,36 @@ namespace Kazakov_KP_01._01.Services
             }
         }
 
+        // БАЛАНС
+
+        public async Task<decimal?> GetBalanceAsync()
+        {
+            var response = await _client.GetAsync($"Users/GetBalance?token={SessionManager.Token}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var data = JsonConvert.DeserializeAnonymousType(json, new { balance = 0m });
+                return data.balance;
+            }
+            return null;
+        }
+
+        public async Task<string> SetBalanceAsync(decimal balance)
+        {
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(balance.ToString(System.Globalization.CultureInfo.InvariantCulture)), "balance");
+
+            var request = new HttpRequestMessage(HttpMethod.Put, $"Users/SetBalance?token={SessionManager.Token}")
+            {
+                Content = content
+            };
+
+            var response = await _client.SendAsync(request);
+            return response.IsSuccessStatusCode ? "Success" : await response.Content.ReadAsStringAsync();
+        }
+
         // ЛОГИ
+
         public async Task<List<Logs>> GetLogAsync()
         {
             var response = await _client.GetAsync($"Log/Get?token={SessionManager.Token}");
@@ -88,12 +118,13 @@ namespace Kazakov_KP_01._01.Services
 
             return new List<Logs>();
         }
+
         public async Task<string> AddLogAsync(string logtype, string message)
         {
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(logtype), "logType");
             content.Add(new StringContent(message), "message");
-            content.Add(new StringContent(DateTime.Now.ToString("o")), "eventTime");
+            content.Add(new StringContent(DateTime.UtcNow.ToString("o")), "eventTime");
 
             var response = await _client.PostAsync($"Log/Add?token={SessionManager.Token}", content);
 
@@ -127,7 +158,7 @@ namespace Kazakov_KP_01._01.Services
             content.Add(new StringContent(fintype), "finType");
             content.Add(new StringContent(message), "message");
             content.Add(new StringContent(amount.ToString(System.Globalization.CultureInfo.InvariantCulture)), "amount");
-            content.Add(new StringContent(DateTime.Now.ToString("o")), "eventTime");
+            content.Add(new StringContent(DateTime.UtcNow.ToString("o")), "eventTime");
 
             var response = await _client.PostAsync($"Finance/Add?token={SessionManager.Token}", content);
 
@@ -140,7 +171,8 @@ namespace Kazakov_KP_01._01.Services
             }
         }
 
-        // ПРЕДММЕТЫ
+        // ПРЕДМЕТЫ
+
         public async Task<List<Items>> GetItemAsync()
         {
             try
@@ -188,6 +220,7 @@ namespace Kazakov_KP_01._01.Services
                 return string.IsNullOrEmpty(errorBody) ? $"Ошибка: {response.StatusCode}" : errorBody;
             }
         }
+
         public async Task<string> EditItemAsync(int itemId, string itemname, int maxBuyprice, bool isactive)
         {
             var content = new MultipartFormDataContent();
@@ -232,6 +265,8 @@ namespace Kazakov_KP_01._01.Services
                 return string.IsNullOrEmpty(errorBody) ? $"Ошибка: {response.StatusCode}" : errorBody;
             }
         }
+
+        // ПОЛЬЗОВАТЕЛИ (для Admin)
 
         public async Task<List<Users>> GetAllUsersAsync()
         {
