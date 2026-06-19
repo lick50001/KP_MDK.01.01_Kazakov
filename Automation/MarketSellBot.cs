@@ -10,18 +10,13 @@ namespace Kazakov_KP_01._01.Automation
         private readonly AutomationContext _ctx;
         private readonly ApiService _api;
 
-        // ===== Координаты на главном окне (вкладка продажи) =====
-
         private const int SellCardButtonX = 750;
         private const int SellCardButtonY = 213;
 
         private static readonly Rectangle StockRegion = new Rectangle(550, 190, 637 - 550, 230 - 190);
 
-        // Кнопка возврата на вкладку покупки (BUY таб в правом меню)
         private const int BuyTabX = 901;
         private const int BuyTabY = 146;
-
-        // ===== Координаты внутри ОКНА ПРОДАЖИ =====
 
         private const int SellWindowWidth = 850;
         private const int SellWindowHeight = 450;
@@ -67,7 +62,6 @@ namespace Kazakov_KP_01._01.Automation
                     break;
                 }
 
-                // Читаем остаток предмета на текущей карточке
                 decimal? stock = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, StockRegion);
 
                 await LogAsync("info", "Остаток предмета: " + (stock.HasValue ? stock.Value.ToString("N0") : "не распознан"));
@@ -99,7 +93,6 @@ namespace Kazakov_KP_01._01.Automation
                 await Task.Delay(1000, _ctx.Token);
             }
 
-            // Всегда возвращаемся на вкладку покупки по завершении продажи
             await LogAsync("info", "Возвращаюсь на вкладку покупки");
             await MouseController.ClickInWindowAsync(_ctx.Market, BuyTabX, BuyTabY);
             await Task.Delay(800, _ctx.Token);
@@ -137,7 +130,6 @@ namespace Kazakov_KP_01._01.Automation
                 return false;
             }
 
-            // Читаем текущую цену за единицу
             OcrResult rawPrice = _ctx.Ocr.ReadRegionInWindow(sellWindow, SellPriceRegion, false);
             await LogAsync("info", "OCR сырой текст цены продажи: '" + rawPrice.Text + "' (conf: " + rawPrice.Confidence.ToString("F1") + "%)");
 
@@ -153,7 +145,6 @@ namespace Kazakov_KP_01._01.Automation
 
             await LogAsync("info", "Цена: " + currentPrice.Value.ToString("N0") + " → +30% → " + newPrice.ToString("N0"));
 
-            // Вводим новую цену
             bool priceOk = await ClearAndTypeInWindowAsync(sellWindow, SellPriceFieldX, SellPriceFieldY, ((long)newPrice).ToString());
 
             if (!priceOk)
@@ -164,7 +155,6 @@ namespace Kazakov_KP_01._01.Automation
 
             await Task.Delay(300, _ctx.Token);
 
-            // Вводим максимальное количество — поле само обрежет до остатка
             bool qtyOk = await ClearAndTypeInWindowAsync(sellWindow, SellQuantityFieldX, SellQuantityFieldY, "9999");
 
             if (!qtyOk)
@@ -175,7 +165,6 @@ namespace Kazakov_KP_01._01.Automation
 
             await Task.Delay(400, _ctx.Token);
 
-            // Читаем итоговую сумму продажи для финансового лога
             decimal? totalSale = _ctx.Ocr.ReadNumberAdaptiveInWindow(sellWindow, SellTotalRegion);
             await LogAsync("info", "Итоговая сумма продажи: " + (totalSale.HasValue ? totalSale.Value.ToString("N0") : "не распознана"));
 
@@ -194,6 +183,9 @@ namespace Kazakov_KP_01._01.Automation
 
             await _api.AddFinanceLogAsync("Продажа", "Продан предмет по цене " + newPrice.ToString("N0") + "/шт", finalAmount);
             await LogAsync("success", "Предмет продан, итого: " + finalAmount.ToString("N0"));
+
+            // Уведомление в ВК о продаже
+            await VkNotifier.NotifySellAsync(finalAmount);
 
             return true;
         }

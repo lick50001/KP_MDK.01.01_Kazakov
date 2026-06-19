@@ -1,4 +1,5 @@
-﻿using Kazakov_KP_01._01.Models;
+﻿using Kazakov_KP_01._01.Classes;
+using Kazakov_KP_01._01.Models;
 using Kazakov_KP_01._01.Services;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,6 @@ namespace Kazakov_KP_01._01.Automation
         private const int BuyButtonX = 735;
         private const int BuyButtonY = 260;
 
-        // Исправлена координата кнопки переключения на продажу
         private const int SellTabX = 898;
         private const int SellTabY = 206;
 
@@ -76,7 +76,6 @@ namespace Kazakov_KP_01._01.Automation
                 await Task.Delay(1200, _ctx.Token);
             }
 
-            // Всегда переключаемся на продажу по завершении цикла покупки
             await HandleSwitchToSellAsync();
         }
 
@@ -109,7 +108,6 @@ namespace Kazakov_KP_01._01.Automation
                 return false;
             }
 
-            // Проверяем баланс ДО открытия окна сделки
             decimal? balanceBefore = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, BalanceRegion);
 
             if (!balanceBefore.HasValue || balanceBefore.Value <= 0)
@@ -120,8 +118,8 @@ namespace Kazakov_KP_01._01.Automation
 
             if (balanceBefore.Value < price.Value)
             {
-                await LogAsync("warning", "Баланса (" + balanceBefore.Value.ToString("N0") + ") не хватает даже на 1 шт '" + item.ItemName + "' по цене " + price.Value.ToString("N0"));
-                return true; // сигнал завершить цикл — денег нет
+                await LogAsync("warning", "Баланса (" + balanceBefore.Value.ToString("N0") + ") не хватает даже на 1 шт '" + item.ItemName + "'");
+                return true;
             }
 
             await LogAsync("info", "Цена выгодная, открываю окно покупки '" + item.ItemName + "'");
@@ -178,8 +176,6 @@ namespace Kazakov_KP_01._01.Automation
             if (desiredQuantity <= 0)
             {
                 await LogAsync("warning", "Баланса не хватает даже на 1 единицу '" + item.ItemName + "'");
-
-                // Закрываем окно сделки и завершаем цикл
                 await MouseController.ClickInWindowAsync(dealWindow, DealCancelX, DealCancelY);
                 await Task.Delay(400, _ctx.Token);
                 return true;
@@ -187,8 +183,7 @@ namespace Kazakov_KP_01._01.Automation
 
             if (desiredQuantity > 999)
             {
-                await LogAsync("warning", "Подозрительно большое количество (" + desiredQuantity + "), возможна ошибка OCR цены. Пропускаю предмет.");
-
+                await LogAsync("warning", "Подозрительно большое количество (" + desiredQuantity + "), пропускаю предмет.");
                 await MouseController.ClickInWindowAsync(dealWindow, DealCancelX, DealCancelY);
                 await Task.Delay(400, _ctx.Token);
                 return false;
@@ -206,8 +201,6 @@ namespace Kazakov_KP_01._01.Automation
 
             await Task.Delay(400, _ctx.Token);
 
-            // Считаем сумму по желаемому количеству (не по OCR после ввода,
-            // так как OCR поля количества давал неверные значения "41")
             decimal totalToPay = unitPrice.Value * desiredQuantity;
 
             await MouseController.ClickInWindowAsync(dealWindow, DealConfirmX, DealConfirmY);
@@ -220,7 +213,6 @@ namespace Kazakov_KP_01._01.Automation
                 await LogAsync("warning", "Ошибка при покупке '" + item.ItemName + "' (нет товара или баланса)");
                 await Task.Delay(300, _ctx.Token);
 
-                // Пробуем закрыть окно сделки если оно ещё открыто
                 try
                 {
                     MarketWindow dealWindowCheck = MarketWindow.FindBySize("MarketAO", DealWindowWidth, DealWindowHeight, 8);
@@ -229,13 +221,15 @@ namespace Kazakov_KP_01._01.Automation
                 }
                 catch { }
 
-                return true; // сигнал завершить цикл
+                return true;
             }
 
             await _api.AddFinanceLogAsync("Покупка", "Куплен предмет: " + item.ItemName + " x" + desiredQuantity, -totalToPay);
             await LogAsync("success", "Куплен '" + item.ItemName + "' x" + desiredQuantity + " за " + totalToPay.ToString("N0"));
 
-            // Синхронизируем баланс с API после покупки
+            // Уведомление в ВК о покупке
+            await VkNotifier.NotifyBuyAsync(item.ItemName, desiredQuantity, totalToPay);
+
             decimal? newBalance = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, BalanceRegion);
             if (newBalance.HasValue)
             {
@@ -274,10 +268,6 @@ namespace Kazakov_KP_01._01.Automation
             return true;
         }
 
-        /// <summary>
-        /// Переключается на вкладку продажи и запускает цикл продажи.
-        /// Вызывается всегда по завершении цикла покупки.
-        /// </summary>
         private async Task HandleSwitchToSellAsync()
         {
             await LogAsync("info", "Переключаюсь на вкладку продажи");
@@ -286,6 +276,11 @@ namespace Kazakov_KP_01._01.Automation
 
             MarketSellBot sellBot = new MarketSellBot(_ctx);
             await sellBot.RunFullSellCycleAsync();
+
+            // Итоговый отчёт в ВК после завершения всего цикла
+            var fins = await _api.GetFinanceLogAsync();
+            var summary = FinanceCalculator.Calculate(fins);
+            await VkNotifier.NotifyCycleSummaryAsync(summary.Profit24h, summary.ProfitSession);
         }
 
         private async Task<bool> ClearAndTypeInWindowAsync(MarketWindow window, int relativeX, int relativeY, string text)

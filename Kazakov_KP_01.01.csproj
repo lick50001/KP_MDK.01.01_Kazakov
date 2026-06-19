@@ -129,6 +129,7 @@
       <DependentUpon>Сhecklist.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ApiService.cs" />
+    <Compile Include="Services\VkNotifier.cs" />
     <Page Include="Elements\FinanceLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

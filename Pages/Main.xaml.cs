@@ -98,5 +98,11 @@ namespace Kazakov_KP_01._01.Pages
         private void Window_MouseDown(object sender, MouseButtonEventArgs e) { if (e.LeftButton == MouseButtonState.Pressed) DragMove(); }
         private void CloseBtn_Click(object sender, RoutedEventArgs e) => Close();
         private void MinimizeBtn_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+
+        private async void TestVk_Click(object sender, RoutedEventArgs e)
+        {
+            string result = await VkNotifier.TestSendAsync("Тест бота");
+            MessageBox.Show(result, "VK ответ");
+        }
     }
 }

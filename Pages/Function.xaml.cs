@@ -159,5 +159,7 @@ namespace Kazakov_KP_01._01.Pages
                 FunctionsContainer.Children.Add(card);
             }
         }
+
+        
     }
 }

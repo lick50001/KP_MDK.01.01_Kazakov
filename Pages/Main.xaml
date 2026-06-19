@@ -25,6 +25,7 @@
                         <TextBlock x:Name="Btn_Price" Text="// СПИСКИ" Cursor="Hand" MouseDown="Nav_Price" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 30"/>
                         <TextBlock x:Name="Btn_Finance" Text="// ФИНАНСЫ" Cursor="Hand" MouseDown="Nav_Finance" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 0 0 0"/>
                         <TextBlock x:Name="Btn_Admin" Text="// АДМИНКА" Cursor="Hand" MouseDown="Nav_Admin" FontSize="24" FontWeight="SemiBold" Foreground="#6E7485" Margin="74 30 0 0" Visibility="Collapsed"/>
+                        <Button Click="TestVk_Click" Width="100" Height="40"/>
                     </StackPanel>
 
                     <Border Width="313" Height="85" Background="#252831" CornerRadius="9" VerticalAlignment="Top" Margin="22,911,22,0" BorderBrush="#FF33FFFF" BorderThickness="0.3">

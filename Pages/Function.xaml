@@ -10,5 +10,6 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Hidden" Margin="0,0,30,0">
         <WrapPanel x:Name="FunctionsContainer" Orientation="Horizontal" Margin="0,0,0,30"/>
+
     </ScrollViewer>
 </Page>
