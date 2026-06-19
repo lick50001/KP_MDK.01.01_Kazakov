@@ -8,11 +8,6 @@ using System.Threading.Tasks;
 
 namespace Kazakov_KP_01._01.Automation
 {
-    /// <summary>
-    /// Управление мышью: плавные перемещения по кривой Безье и клики через SendInput.
-    /// Поддерживает как абсолютные экранные координаты, так и координаты
-    /// относительно окна MarketAO через MarketWindow.
-    /// </summary>
     public static class MouseController
     {
         #region Win32
@@ -63,24 +58,14 @@ namespace Kazakov_KP_01._01.Automation
 
         private static readonly Random _rng = new Random();
 
-        /// <summary>
-        /// Текущая позиция курсора.
-        /// </summary>
         public static Point GetPosition()
         {
             GetCursorPos(out var p);
             return new Point(p.X, p.Y);
         }
 
-        /// <summary>
-        /// Мгновенно ставит курсор в точку (без анимации).
-        /// </summary>
         public static void SetPosition(int x, int y) => SetCursorPos(x, y);
 
-        /// <summary>
-        /// Плавно перемещает курсор из текущей позиции в точку (x, y)
-        /// по кривой Безье с небольшим случайным дрожанием.
-        /// </summary>
         public static async Task MoveSmoothAsync(int x, int y, int durationMs = 400, int steps = 40)
         {
             var start = GetPosition();
@@ -118,9 +103,6 @@ namespace Kazakov_KP_01._01.Automation
         public static Task MoveSmoothAsync(Point target, int durationMs = 400, int steps = 40)
             => MoveSmoothAsync(target.X, target.Y, durationMs, steps);
 
-        /// <summary>
-        /// Перемещает курсор в центр заданного прямоугольника (абсолютные координаты).
-        /// </summary>
         public static Task MoveToRegionCenterAsync(Rectangle region, int durationMs = 400, int steps = 40)
         {
             int centerX = region.X + region.Width / 2;
@@ -142,9 +124,6 @@ namespace Kazakov_KP_01._01.Automation
             SendMouseInput(MOUSEEVENTF_RIGHTUP);
         }
 
-        /// <summary>
-        /// Перемещается в точку (x, y) и кликает левой кнопкой (абсолютные координаты).
-        /// </summary>
         public static async Task ClickAtAsync(int x, int y, int moveDurationMs = 400, int clickDelayMs = 60)
         {
             await MoveSmoothAsync(x, y, moveDurationMs);
@@ -152,9 +131,6 @@ namespace Kazakov_KP_01._01.Automation
             await LeftClickAsync(clickDelayMs);
         }
 
-        /// <summary>
-        /// Перемещается в центр области и кликает левой кнопкой (абсолютные координаты).
-        /// </summary>
         public static async Task ClickRegionAsync(Rectangle region, int moveDurationMs = 400, int clickDelayMs = 60)
         {
             int centerX = region.X + region.Width / 2;
@@ -171,29 +147,18 @@ namespace Kazakov_KP_01._01.Automation
             await LeftClickAsync();
         }
 
-        // ===== Относительно окна MarketAO (основной способ использования) =====
-
-        /// <summary>
-        /// Кликает по точке, заданной координатами относительно окна MarketAO.
-        /// </summary>
         public static async Task ClickInWindowAsync(MarketWindow market, int relativeX, int relativeY, int moveDurationMs = 400, int clickDelayMs = 60)
         {
             var screenPoint = market.ToScreen(relativeX, relativeY);
             await ClickAtAsync(screenPoint.X, screenPoint.Y, moveDurationMs, clickDelayMs);
         }
 
-        /// <summary>
-        /// Кликает по центру области, заданной координатами относительно окна MarketAO.
-        /// </summary>
         public static async Task ClickRegionInWindowAsync(MarketWindow market, Rectangle relativeRegion, int moveDurationMs = 400, int clickDelayMs = 60)
         {
             var screenRegion = market.ToScreen(relativeRegion);
             await ClickRegionAsync(screenRegion, moveDurationMs, clickDelayMs);
         }
 
-        /// <summary>
-        /// Перемещает курсор (без клика) в точку относительно окна MarketAO.
-        /// </summary>
         public static async Task MoveInWindowAsync(MarketWindow market, int relativeX, int relativeY, int durationMs = 400, int steps = 40)
         {
             var screenPoint = market.ToScreen(relativeX, relativeY);

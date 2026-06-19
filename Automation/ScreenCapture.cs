@@ -8,9 +8,6 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace Kazakov_KP_01._01.Automation
 {
-    /// <summary>
-    /// Захват области экрана в Bitmap для последующего OCR.
-    /// </summary>
     public static class ScreenCapture
     {
         [DllImport("user32.dll")]
@@ -19,9 +16,6 @@ namespace Kazakov_KP_01._01.Automation
         private const int SM_CXSCREEN = 0;
         private const int SM_CYSCREEN = 1;
 
-        /// <summary>
-        /// Захватывает прямоугольную область экрана по абсолютным координатам.
-        /// </summary>
         public static Bitmap CaptureRegion(Rectangle region)
         {
             if (region.Width <= 0 || region.Height <= 0)
@@ -37,15 +31,9 @@ namespace Kazakov_KP_01._01.Automation
             return bmp;
         }
 
-        /// <summary>
-        /// Захватывает область экрана по координатам x, y, width, height.
-        /// </summary>
         public static Bitmap CaptureRegion(int x, int y, int width, int height)
             => CaptureRegion(new Rectangle(x, y, width, height));
 
-        /// <summary>
-        /// Захватывает весь экран (основной монитор).
-        /// </summary>
         public static Bitmap CaptureFullScreen()
         {
             int screenW = GetSystemMetrics(SM_CXSCREEN);

@@ -20,11 +20,6 @@ namespace Kazakov_KP_01._01.Automation
         public override string ToString() => "\"" + Text + "\" (conf: " + Confidence.ToString("F1") + "%)";
     }
 
-    /// <summary>
-    /// Обёртка над Tesseract OCR, настроенная под распознавание чисел.
-    /// Поддерживает чтение как по абсолютным экранным координатам, так и
-    /// относительно окна MarketAO через MarketWindow.
-    /// </summary>
     public class OcrReader : IDisposable
     {
         private readonly TesseractEngine _engine;
@@ -46,8 +41,6 @@ namespace Kazakov_KP_01._01.Automation
         public void SetCharWhitelist(string allowedChars) => _engine.SetVariable("tessedit_char_whitelist", allowedChars);
         public void ClearCharWhitelist() => _engine.SetVariable("tessedit_char_whitelist", "");
         public void SetPageSegmentationMode(PageSegMode mode) => _engine.DefaultPageSegMode = mode;
-
-        // ===== По абсолютным экранным координатам =====
 
         public OcrResult ReadRegion(Rectangle screenRegion, bool invert = false)
         {
@@ -73,8 +66,6 @@ namespace Kazakov_KP_01._01.Automation
             }
         }
 
-        // ===== Относительно окна MarketAO =====
-
         public decimal? ReadNumberInWindow(MarketWindow market, Rectangle relativeRegion, bool invert = false)
         {
             Rectangle screenRegion = market.ToScreen(relativeRegion);
@@ -87,12 +78,6 @@ namespace Kazakov_KP_01._01.Automation
             return ReadRegion(screenRegion, invert);
         }
 
-        /// <summary>
-        /// Распознаёт число, автоматически пробуя оба варианта инверсии цвета
-        /// и выбирая результат с более высокой уверенностью распознавания.
-        /// Использует увеличенный масштаб (x6) и адаптивную бинаризацию (Оцу)
-        /// для повышения точности на похожих цифрах.
-        /// </summary>
         public decimal? ReadNumberAdaptive(Rectangle screenRegion)
         {
             var normal = ReadNumberWithConfidence(screenRegion, false);
@@ -148,10 +133,6 @@ namespace Kazakov_KP_01._01.Automation
             }
         }
 
-        /// <summary>
-        /// Строгий парсинг числа — отбрасывает результат, если в строке
-        /// остался хоть один не-цифровой символ после очистки разделителей.
-        /// </summary>
         private decimal? ParseNumberStrict(string rawText)
         {
             if (string.IsNullOrEmpty(rawText)) return null;

@@ -4,9 +4,7 @@ using System.Drawing.Imaging;
 
 namespace Kazakov_KP_01._01.Automation
 {
-    /// <summary>
-    /// Предобработка изображения для повышения точности OCR.
-    /// </summary>
+
     public static class ImagePreprocessor
     {
         public static Bitmap Scale(Bitmap source, float scale)
@@ -78,9 +76,6 @@ namespace Kazakov_KP_01._01.Automation
             return binarized;
         }
 
-        /// <summary>
-        /// Бинаризация с автоматическим подбором порога методом Оцу.
-        /// </summary>
         public static Bitmap BinarizeOtsu(Bitmap source, bool invert = false)
         {
             Bitmap gray = ToGrayscale(source);

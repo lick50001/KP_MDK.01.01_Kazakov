@@ -86,7 +86,7 @@ namespace Kazakov_KP_01._01.Services
 
                 var response = await _client.GetAsync(url);
                 string result = await response.Content.ReadAsStringAsync();
-                return result; // возвращаем сырой ответ для диагностики
+                return result; 
             }
             catch (Exception ex)
             {

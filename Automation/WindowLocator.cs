@@ -8,10 +8,6 @@ using System.Text;
 
 namespace Kazakov_KP_01._01.Automation
 {
-    /// <summary>
-    /// Находит окно целевого приложения (MarketAO) по заголовку, процессу
-    /// или размеру и предоставляет его текущие экранные координаты.
-    /// </summary>
     public static class WindowLocator
     {
         [DllImport("user32.dll")]
@@ -69,9 +65,6 @@ namespace Kazakov_KP_01._01.Automation
         [StructLayout(LayoutKind.Sequential)]
         private struct POINT { public int X, Y; }
 
-        /// <summary>
-        /// Находит главное окно процесса по имени (без .exe).
-        /// </summary>
         public static IntPtr FindByProcessName(string processName)
         {
             Process proc = Process.GetProcessesByName(processName).FirstOrDefault();
@@ -81,9 +74,6 @@ namespace Kazakov_KP_01._01.Automation
             return proc.MainWindowHandle;
         }
 
-        /// <summary>
-        /// Находит окно по точному заголовку через Process.MainWindowTitle.
-        /// </summary>
         public static IntPtr FindByTitle(string titleContains)
         {
             foreach (Process proc in Process.GetProcesses())
@@ -98,9 +88,6 @@ namespace Kazakov_KP_01._01.Automation
             return IntPtr.Zero;
         }
 
-        /// <summary>
-        /// Более надёжный поиск — перечисляет ВСЕ окна системы по заголовку.
-        /// </summary>
         public static IntPtr FindByTitleEnum(string titleContains)
         {
             IntPtr found = IntPtr.Zero;
@@ -125,12 +112,6 @@ namespace Kazakov_KP_01._01.Automation
             return found;
         }
 
-        /// <summary>
-        /// Находит окно процесса с заданным точным размером клиентской области.
-        /// Полезно для окон без видимого заголовка (WindowStyle="None"),
-        /// у которых GetWindowText не возвращает осмысленное значение,
-        /// но размер задан в XAML и известен заранее.
-        /// </summary>
         public static IntPtr FindByProcessAndSize(string processName, int expectedWidth, int expectedHeight, int tolerance = 5)
         {
             IntPtr found = IntPtr.Zero;
@@ -176,9 +157,6 @@ namespace Kazakov_KP_01._01.Automation
             return found;
         }
 
-        /// <summary>
-        /// Находит ВСЕ видимые окна заданного процесса.
-        /// </summary>
         public static List<IntPtr> FindAllByProcessName(string processName)
         {
             List<IntPtr> result = new List<IntPtr>();
@@ -211,9 +189,6 @@ namespace Kazakov_KP_01._01.Automation
             return result;
         }
 
-        /// <summary>
-        /// Диагностика: возвращает список всех видимых окон в системе.
-        /// </summary>
         public static string ListAllVisibleWindows()
         {
             StringBuilder sb = new StringBuilder();
@@ -253,14 +228,8 @@ namespace Kazakov_KP_01._01.Automation
             return sb.Length > 0 ? sb.ToString() : "Видимых окон с заголовком не найдено.";
         }
 
-        /// <summary>
-        /// Проверяет, что хендл окна валиден и окно ещё существует.
-        /// </summary>
         public static bool IsValid(IntPtr hWnd) => hWnd != IntPtr.Zero && IsWindow(hWnd);
 
-        /// <summary>
-        /// Возвращает полные экранные координаты окна (включая рамку и заголовок).
-        /// </summary>
         public static Rectangle GetWindowBounds(IntPtr hWnd)
         {
             RECT rect;
@@ -270,9 +239,6 @@ namespace Kazakov_KP_01._01.Automation
             return new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
         }
 
-        /// <summary>
-        /// Возвращает экранные координаты КЛИЕНТСКОЙ области окна.
-        /// </summary>
         public static Rectangle GetClientBounds(IntPtr hWnd)
         {
             RECT clientRect;
@@ -290,10 +256,6 @@ namespace Kazakov_KP_01._01.Automation
             );
         }
 
-        /// <summary>
-        /// Разворачивает окно если оно свёрнуто и выводит на передний план,
-        /// обходя защиту Windows от "захвата фокуса" чужими процессами.
-        /// </summary>
         public static void RestoreAndFocus(IntPtr hWnd)
         {
             if (IsIconic(hWnd))
@@ -320,18 +282,12 @@ namespace Kazakov_KP_01._01.Automation
             }
         }
 
-        /// <summary>
-        /// Переводит точку из системы координат окна в абсолютные экранные координаты.
-        /// </summary>
         public static Point WindowToScreen(IntPtr hWnd, int relativeX, int relativeY)
         {
             Rectangle clientBounds = GetClientBounds(hWnd);
             return new Point(clientBounds.X + relativeX, clientBounds.Y + relativeY);
         }
 
-        /// <summary>
-        /// Переводит прямоугольник из системы координат окна в абсолютные экранные координаты.
-        /// </summary>
         public static Rectangle WindowToScreen(IntPtr hWnd, Rectangle relativeRegion)
         {
             Rectangle clientBounds = GetClientBounds(hWnd);

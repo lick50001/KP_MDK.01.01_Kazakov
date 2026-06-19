@@ -227,7 +227,6 @@ namespace Kazakov_KP_01._01.Automation
             await _api.AddFinanceLogAsync("Покупка", "Куплен предмет: " + item.ItemName + " x" + desiredQuantity, -totalToPay);
             await LogAsync("success", "Куплен '" + item.ItemName + "' x" + desiredQuantity + " за " + totalToPay.ToString("N0"));
 
-            // Уведомление в ВК о покупке
             await VkNotifier.NotifyBuyAsync(item.ItemName, desiredQuantity, totalToPay);
 
             decimal? newBalance = _ctx.Ocr.ReadNumberAdaptiveInWindow(_ctx.Market, BalanceRegion);
@@ -277,7 +276,6 @@ namespace Kazakov_KP_01._01.Automation
             MarketSellBot sellBot = new MarketSellBot(_ctx);
             await sellBot.RunFullSellCycleAsync();
 
-            // Итоговый отчёт в ВК после завершения всего цикла
             var fins = await _api.GetFinanceLogAsync();
             var summary = FinanceCalculator.Calculate(fins);
             await VkNotifier.NotifyCycleSummaryAsync(summary.Profit24h, summary.ProfitSession);

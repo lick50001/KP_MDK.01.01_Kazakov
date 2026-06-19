@@ -184,7 +184,6 @@ namespace Kazakov_KP_01._01.Automation
             await _api.AddFinanceLogAsync("Продажа", "Продан предмет по цене " + newPrice.ToString("N0") + "/шт", finalAmount);
             await LogAsync("success", "Предмет продан, итого: " + finalAmount.ToString("N0"));
 
-            // Уведомление в ВК о продаже
             await VkNotifier.NotifySellAsync(finalAmount);
 
             return true;
